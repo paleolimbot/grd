@@ -3,88 +3,53 @@
 \name{grd_subset}
 \alias{grd_subset}
 \alias{grd_crop}
+\alias{grd_extend}
 \alias{grd_crop.grd_rct}
 \alias{grd_crop.grd_xy}
-\alias{grd_extend}
 \alias{grd_extend.grd_rct}
 \alias{grd_extend.grd_xy}
-\alias{grd_index}
-\alias{grd_index_range}
-\alias{grd_cell_bounds}
-\alias{grd_cell_bounds.grd_rct}
-\alias{grd_cell_bounds.grd_xy}
-\alias{grd_cell_center}
-\alias{grd_cell_center.grd_rct}
-\alias{grd_cell_center.grd_xy}
-\title{Subset grd grids}
+\title{Subset grid objects}
 \usage{
 grd_subset(grid, i = NULL, j = NULL, ...)
 
-grd_crop(grid, bbox, ..., snap = list(ceiling, floor))
+grd_crop(grid, bbox, ..., snap = NULL)
 
-\method{grd_crop}{grd_rct}(grid, bbox, ..., snap = grd_snap_previous)
+grd_extend(grid, bbox, ..., snap = NULL)
 
-\method{grd_crop}{grd_xy}(grid, bbox, ..., snap = list(ceiling, floor))
+\method{grd_crop}{grd_rct}(grid, bbox, ..., snap = NULL)
 
-grd_extend(grid, bbox, ..., snap = list(ceiling, floor))
+\method{grd_crop}{grd_xy}(grid, bbox, ..., snap = NULL)
 
-\method{grd_extend}{grd_rct}(grid, bbox, ..., snap = list(grd_snap_next, grd_snap_previous))
+\method{grd_extend}{grd_rct}(grid, bbox, ..., snap = NULL)
 
-\method{grd_extend}{grd_xy}(grid, bbox, ..., snap = list(ceiling, floor))
-
-grd_index(grid, point, ..., snap = grd_snap_next)
-
-grd_index_range(grid, bbox, ..., snap = grd_snap_next)
-
-grd_cell_bounds(grid, i, j = NULL, ...)
-
-\method{grd_cell_bounds}{grd_rct}(grid, i, j = NULL, ..., out_of_bounds = "keep")
-
-\method{grd_cell_bounds}{grd_xy}(grid, i, j = NULL, ..., out_of_bounds = "keep")
-
-grd_cell_center(grid, i, j = NULL, ...)
-
-\method{grd_cell_center}{grd_rct}(grid, i, j = NULL, ..., out_of_bounds = "keep")
-
-\method{grd_cell_center}{grd_xy}(grid, i, j = NULL, ..., out_of_bounds = "keep")
+\method{grd_extend}{grd_xy}(grid, bbox, ..., snap = NULL)
 }
 \arguments{
 \item{grid}{A \code{\link[=grd_xy]{grd_xy()}}, \code{\link[=grd_rct]{grd_rct()}}, or other object
 implementing \verb{grd_*()} methods.}
 
-\item{i, j}{Raw indices. These must be equally
-spaced if passed as numeric; if passed as logical they are
-recycled silently along each dimension. Indexing grd grids
-is always 1-based and always starts from the left and top of
-the bounding box regardless of internal data ordering. A
-\code{list()} containing \code{i} and \code{j} elements can also be supplied.}
+\item{i}{1-based index values. \code{i} indices correspond to decreasing
+\code{y} values; \code{j} indices correspond to increasing \code{x} values.
+Values outside the range \code{1:nrow|ncol(data)} will be censored to
+\code{NA} including 0 and negative values.}
+
+\item{j}{1-based index values. \code{i} indices correspond to decreasing
+\code{y} values; \code{j} indices correspond to increasing \code{x} values.
+Values outside the range \code{1:nrow|ncol(data)} will be censored to
+\code{NA} including 0 and negative values.}
 
 \item{...}{Passed to subset methods}
 
-\item{bbox}{An \code{\link[=rct]{rct()}} object.}
+\item{bbox}{An \code{\link[wk:rct]{wk::rct()}} object.}
 
 \item{snap}{A function that transforms real-valued indices to integer
 indices (e.g., \code{\link[=floor]{floor()}}, \code{\link[=ceiling]{ceiling()}}, or \code{\link[=round]{round()}}).
 For \code{\link[=grd_index_range]{grd_index_range()}}, a \code{list()} with exactly two elements to be called
 for the minimum and maximum index values, respectively.}
-
-\item{point}{A \link[=wk_handle]{handleable} of points.}
-
-\item{out_of_bounds}{One of 'keep', 'censor', 'discard', or 'squish'}
 }
 \value{
-\itemize{
-\item \code{grd_index()}: returns a \code{list(i, j)} of index values corresponding
-to the input points and adjusted according to \code{snap}. Index values
-will be outside \code{dim(grid)} for points outside \code{wk_bbox(grid)} including
-negative values.
-\item \code{grd_subset()}: A modified \code{\link[=grd]{grd()}}.
-\item \code{grd_subset_indices()}: A \code{list()} with components
-\code{i} (\code{c(start = , stop = , step = )}), \code{j} (\code{c(start = , stop = , step = )}),
-and \code{bbox} (\code{\link[=rct]{rct()}} of length 1). In this value \code{start} is the index before
-the first element and \code{stop} is the last element (equivalent to notation
-for a zero-based Python slice).
-}
+A modified \code{grid} whose cell centres have not changed location
+as a result of the subset.
 }
 \description{
 The \code{\link[=grd_subset]{grd_subset()}} method handles the subsetting of a \code{\link[=grd]{grd()}}
@@ -95,6 +60,8 @@ relationship to x-y space has not changed.
 }
 \examples{
 grid <- grd_rct(volcano)
-grd_subset(grid, seq(2, 61, by = 4), seq(2, 87, by = 4))
+grd_subset(grid, 1:20, 1:30)
+grd_crop(grid, rct(-10, -10, 10, 10))
+grd_extend(grid, rct(-10, -10, 10, 10))
 
 }
