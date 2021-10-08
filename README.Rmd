@@ -21,15 +21,15 @@ knitr::opts_chunk$set(
 [![R-CMD-check](https://github.com/paleolimbot/grd/workflows/R-CMD-check/badge.svg)](https://github.com/paleolimbot/grd/actions)
 <!-- badges: end -->
 
-The goal of grd is to do provide data structures and a minimal set of generics to work with grids of points or rectrangles (i.e., raster data). The grd package is built on top of [wk](https://github.com/paleolimbot/wk)
+The goal of grd is to do provide data structures and a minimal set of generics to work with grids of points or rectangles (i.e., raster data). The grd package is built on top of [wk](https://github.com/paleolimbot/wk) and uses the `rct()` and `xy()` structures heavily.
 
 ## Installation
 
 You can install the development version from [GitHub](https://github.com/) with:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("paleolimbot/grd")
+# install.packages("remotes")
+remotes::install_github("paleolimbot/grd")
 ```
 
 ## Example
@@ -51,8 +51,9 @@ plot(grid)
 
 You can use `grd_crop()`, `grd_extend()`, or `grd_subset()` to select parts of a grid whilst keeping each cell's relationship to space:
 
-```{r}
+```{r subset}
 plot(grd_subset(grid, 1:30, 1:30))
+plot(grd_crop(grid, rct(5917000, 1757600, 5917300, 1757800)))
 ```
 
 Use `grd_index()` or `grd_index_range()` to find cell indices based on a spatial query; use `grd_cell_bounds()` or `grd_cell_center()` to get information about specific cells:

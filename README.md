@@ -13,9 +13,10 @@ coverage](https://codecov.io/gh/paleolimbot/grd/branch/master/graph/badge.svg)](
 <!-- badges: end -->
 
 The goal of grd is to do provide data structures and a minimal set of
-generics to work with grids of points or rectrangles (i.e., raster
-data). The grd package is built on top of
-[wk](https://github.com/paleolimbot/wk)
+generics to work with grids of points or rectangles (i.e., raster data).
+The grd package is built on top of
+[wk](https://github.com/paleolimbot/wk) and uses the `rct()` and `xy()`
+structures heavily.
 
 ## Installation
 
@@ -23,8 +24,8 @@ You can install the development version from
 [GitHub](https://github.com/) with:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("paleolimbot/grd")
+# install.packages("remotes")
+remotes::install_github("paleolimbot/grd")
 ```
 
 ## Example
@@ -54,7 +55,13 @@ parts of a grid whilst keeping each cell’s relationship to space:
 plot(grd_subset(grid, 1:30, 1:30))
 ```
 
-<img src="man/figures/README-unnamed-chunk-2-1.png" width="100%" />
+<img src="man/figures/README-subset-1.png" width="100%" />
+
+``` r
+plot(grd_crop(grid, rct(5917000, 1757600, 5917300, 1757800)))
+```
+
+<img src="man/figures/README-subset-2.png" width="100%" />
 
 Use `grd_index()` or `grd_index_range()` to find cell indices based on a
 spatial query; use `grd_cell_bounds()` or `grd_cell_center()` to get
