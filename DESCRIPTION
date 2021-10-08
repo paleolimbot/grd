@@ -1,0 +1,18 @@
+Package: grd
+Title: Raster and Grid Geometry
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Dewey",
+             family = "Dunnington",
+             role = c("aut", "cre"),
+             email = "dewey@fishandwhistle.net",
+             comment = c(ORCID = "0000-0002-9415-4582"))
+Description: Provides a basic data structure for grids of points or
+  rectangles including the math needed to index, extract, and resample
+  these objects. A basic set of generics is provided such that downstream
+  packages can extend the concept of a grid to alternative data sources.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2
