@@ -189,7 +189,7 @@ test_that("grd_cell_center() works for grd_rct()", {
     grd_cell_center(grid, 1, 1)
   )
 
-  expect_error(grd_cell_bounds(grid, "fish", "fish"), "must be numeric")
+  expect_error(grd_cell_center(grid, "fish", "fish"), "must be numeric")
 })
 
 test_that("grd_cell_center() works for grd_xy()", {
@@ -215,7 +215,7 @@ test_that("grd_cell_center() works for grd_xy()", {
     grd_cell_center(grid, 1, 1)
   )
 
-  expect_error(grd_cell_bounds(grid, "fish", "fish"), "must be numeric")
+  expect_error(grd_cell_center(grid, "fish", "fish"), "must be numeric")
 })
 
 test_that("subset works for grd_rct", {
