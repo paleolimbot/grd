@@ -4,19 +4,19 @@
 \alias{grd_subset}
 \alias{grd_subset_data}
 \alias{grd_crop}
-\alias{grd_crop.wk_grd_rct}
-\alias{grd_crop.wk_grd_xy}
+\alias{grd_crop.grd_rct}
+\alias{grd_crop.grd_xy}
 \alias{grd_extend}
-\alias{grd_extend.wk_grd_rct}
-\alias{grd_extend.wk_grd_xy}
+\alias{grd_extend.grd_rct}
+\alias{grd_extend.grd_xy}
 \alias{grd_index}
 \alias{grd_index_range}
 \alias{grd_cell_bounds}
-\alias{grd_cell_bounds.wk_grd_rct}
-\alias{grd_cell_bounds.wk_grd_xy}
+\alias{grd_cell_bounds.grd_rct}
+\alias{grd_cell_bounds.grd_xy}
 \alias{grd_cell_center}
-\alias{grd_cell_center.wk_grd_rct}
-\alias{grd_cell_center.wk_grd_xy}
+\alias{grd_cell_center.grd_rct}
+\alias{grd_cell_center.grd_xy}
 \title{Subset grd grids}
 \usage{
 grd_subset(grid, i = NULL, j = NULL, ...)
@@ -25,15 +25,15 @@ grd_subset_data(grid_data, i = NULL, j = NULL, ...)
 
 grd_crop(grid, bbox, ..., snap = list(ceiling, floor))
 
-\method{grd_crop}{wk_grd_rct}(grid, bbox, ..., snap = grd_snap_previous)
+\method{grd_crop}{grd_rct}(grid, bbox, ..., snap = grd_snap_previous)
 
-\method{grd_crop}{wk_grd_xy}(grid, bbox, ..., snap = list(ceiling, floor))
+\method{grd_crop}{grd_xy}(grid, bbox, ..., snap = list(ceiling, floor))
 
 grd_extend(grid, bbox, ..., snap = list(ceiling, floor))
 
-\method{grd_extend}{wk_grd_rct}(grid, bbox, ..., snap = list(grd_snap_next, grd_snap_previous))
+\method{grd_extend}{grd_rct}(grid, bbox, ..., snap = list(grd_snap_next, grd_snap_previous))
 
-\method{grd_extend}{wk_grd_xy}(grid, bbox, ..., snap = list(ceiling, floor))
+\method{grd_extend}{grd_xy}(grid, bbox, ..., snap = list(ceiling, floor))
 
 grd_index(grid, point, ..., snap = grd_snap_next)
 
@@ -41,15 +41,15 @@ grd_index_range(grid, bbox, ..., snap = grd_snap_next)
 
 grd_cell_bounds(grid, i, j = NULL, ...)
 
-\method{grd_cell_bounds}{wk_grd_rct}(grid, i, j = NULL, ..., out_of_bounds = "keep")
+\method{grd_cell_bounds}{grd_rct}(grid, i, j = NULL, ..., out_of_bounds = "keep")
 
-\method{grd_cell_bounds}{wk_grd_xy}(grid, i, j = NULL, ..., out_of_bounds = "keep")
+\method{grd_cell_bounds}{grd_xy}(grid, i, j = NULL, ..., out_of_bounds = "keep")
 
 grd_cell_center(grid, i, j = NULL, ...)
 
-\method{grd_cell_center}{wk_grd_rct}(grid, i, j = NULL, ..., out_of_bounds = "keep")
+\method{grd_cell_center}{grd_rct}(grid, i, j = NULL, ..., out_of_bounds = "keep")
 
-\method{grd_cell_center}{wk_grd_xy}(grid, i, j = NULL, ..., out_of_bounds = "keep")
+\method{grd_cell_center}{grd_xy}(grid, i, j = NULL, ..., out_of_bounds = "keep")
 }
 \arguments{
 \item{grid}{A \code{\link[=grd_xy]{grd_xy()}}, \code{\link[=grd_rct]{grd_rct()}}, or other object

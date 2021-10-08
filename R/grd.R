@@ -26,8 +26,8 @@
 #' @return
 #'   - `grd()` returns a `grd_rct()` for `type == "polygons` or
 #'     a `grd_xy()` otherwise.
-#'   - `grd_rct()` returns an object of class "wk_grd_rct".
-#'   - `grd_xy()` returns an object of class "wk_grd_xy".
+#'   - `grd_rct()` returns an object of class "grd_rct".
+#'   - `grd_xy()` returns an object of class "grd_xy".
 #' @export
 #'
 #' @examples
@@ -158,7 +158,7 @@ grd_rct <- function(data, bbox = rct(0, 0, dim(data)[2], dim(data)[1])) {
 
   bbox <- new_wk_rct(rct, crs = wk_crs(bbox))
 
-  new_wk_grd(list(data = data, bbox = bbox, data_order = data_order), "wk_grd_rct")
+  new_grd(list(data = data, bbox = bbox, data_order = data_order), "grd_rct")
 }
 
 #' @rdname grd
@@ -200,7 +200,7 @@ grd_xy <- function(data, bbox = rct(0, 0, dim(data)[2] - 1, dim(data)[1] - 1)) {
     )
   }
 
-  new_wk_grd(list(data = data, bbox = bbox, data_order = data_order), "wk_grd_xy")
+  new_grd(list(data = data, bbox = bbox, data_order = data_order), "grd_xy")
 }
 
 #' @rdname grd
@@ -211,13 +211,13 @@ as_grd_rct <- function(x, ...) {
 
 #' @rdname grd
 #' @export
-as_grd_rct.wk_grd_rct <- function(x, ...) {
+as_grd_rct.grd_rct <- function(x, ...) {
   x
 }
 
 #' @rdname grd
 #' @export
-as_grd_rct.wk_grd_xy <- function(x, ...) {
+as_grd_rct.grd_xy <- function(x, ...) {
   # from a grd_xy, we assume these were the centres
   s <- grd_summary(x)
 
@@ -242,13 +242,13 @@ as_grd_xy <- function(x, ...) {
 
 #' @rdname grd
 #' @export
-as_grd_xy.wk_grd_xy <- function(x, ...) {
+as_grd_xy.grd_xy <- function(x, ...) {
   x
 }
 
 #' @rdname grd
 #' @export
-as_grd_xy.wk_grd_rct <- function(x, ...) {
+as_grd_xy.grd_rct <- function(x, ...) {
   # from a grid_rct() we take the centers
   s <- grd_summary(x)
 
@@ -270,12 +270,12 @@ as_grd_xy.wk_grd_rct <- function(x, ...) {
 #' @param x A [grd()]
 #' @param subclass An optional subclass.
 #'
-#' @return An object inheriting from 'wk_grd'
+#' @return An object inheriting from 'grd'
 #'
 #' @export
 #'
-new_wk_grd <- function(x, subclass = character()) {
-  structure(x, class = union(subclass, "wk_grd"))
+new_grd <- function(x, subclass = character()) {
+  structure(x, class = union(subclass, "grd"))
 }
 
 
@@ -306,7 +306,7 @@ grd_summary <- function(grid) {
 }
 
 #' @export
-grd_summary.wk_grd_rct <- function(grid) {
+grd_summary.grd_rct <- function(grid) {
   nx <- dim(grid$data)[2]
   ny <- dim(grid$data)[1]
   rct <- unclass(grid$bbox)
@@ -330,7 +330,7 @@ grd_summary.wk_grd_rct <- function(grid) {
 }
 
 #' @export
-grd_summary.wk_grd_xy <- function(grid) {
+grd_summary.grd_xy <- function(grid) {
   nx <- dim(grid$data)[2]
   ny <- dim(grid$data)[1]
   rct <- unclass(grid$bbox)
@@ -372,17 +372,17 @@ grd_data_order.nativeRaster <- function(grid_data) {
 # interface for wk methods
 
 #' @export
-wk_bbox.wk_grd <- function(handleable, ...) {
+wk_bbox.grd <- function(handleable, ...) {
   handleable$bbox
 }
 
 #' @export
-wk_crs.wk_grd <- function(x) {
+wk_crs.grd <- function(x) {
   attr(x$bbox, "crs", exact = TRUE)
 }
 
 #' @export
-wk_set_crs.wk_grd <- function(x, crs) {
+wk_set_crs.grd <- function(x, crs) {
   x$bbox <- wk_set_crs(x$bbox, crs)
   x
 }
@@ -390,7 +390,7 @@ wk_set_crs.wk_grd <- function(x, crs) {
 # interface for setting data and bbox
 
 #' @export
-`[[<-.wk_grd` <- function(x, i, value) {
+`[[<-.grd` <- function(x, i, value) {
   x_bare <- unclass(x)
   if (identical(i, "data")) {
     stopifnot(length(dim(value)) >= 2)
@@ -428,7 +428,7 @@ wk_set_crs.wk_grd <- function(x, crs) {
       )
     }
   } else {
-    stop("Can't set element of a wk_grd that is not 'data' or 'bbox'", call. = FALSE)
+    stop("Can't set element of a grd that is not 'data' or 'bbox'", call. = FALSE)
   }
 
   class(x_bare) <- class(x)
@@ -436,19 +436,19 @@ wk_set_crs.wk_grd <- function(x, crs) {
 }
 
 #' @export
-`$<-.wk_grd` <- function(x, i, value) {
+`$<-.grd` <- function(x, i, value) {
   x[[i]] <- value
   x
 }
 
 # interface for matrix-like extraction and subsetting
 #' @export
-dim.wk_grd <- function(x) {
+dim.grd <- function(x) {
   dim(x$data)
 }
 
 #' @export
-`[.wk_grd` <- function(x, i, j, ..., drop = FALSE) {
+`[.grd` <- function(x, i, j, ..., drop = FALSE) {
   # for this method we never drop dimensions (can use $data[] to do this)
   stopifnot(identical(drop, FALSE))
 
@@ -482,7 +482,7 @@ dim.wk_grd <- function(x) {
 }
 
 #' @export
-format.wk_grd <- function(x, ...) {
+format.grd <- function(x, ...) {
   crs <- wk_crs(x)
   sprintf(
     "<%s [%s] => %s%s>",
@@ -494,14 +494,14 @@ format.wk_grd <- function(x, ...) {
 }
 
 #' @export
-print.wk_grd <- function(x, ...) {
+print.grd <- function(x, ...) {
   cat(paste0(format(x), "\n"))
   utils::str(x)
   invisible(x)
 }
 
 #' @export
-as_xy.wk_grd_xy <- function(x, ...) {
+as_xy.grd_xy <- function(x, ...) {
   rct <- unclass(x$bbox)
   nx <- dim(x$data)[2]
   ny <- dim(x$data)[1]
@@ -559,7 +559,7 @@ as_xy.wk_grd_xy <- function(x, ...) {
 }
 
 #' @export
-as_rct.wk_grd_rct <- function(x, ...) {
+as_rct.grd_rct <- function(x, ...) {
   rct <- unclass(x$bbox)
   nx <- dim(x$data)[2]
   ny <- dim(x$data)[1]
@@ -620,18 +620,18 @@ as_rct.wk_grd_rct <- function(x, ...) {
 }
 
 #' @export
-as_xy.wk_grd_rct <- function(x, ...) {
+as_xy.grd_rct <- function(x, ...) {
   as_xy(as_grd_xy(x))
 }
 
 #' @export
-as_rct.wk_grd_xy <- function(x, ...) {
+as_rct.grd_xy <- function(x, ...) {
   as_rct(as_grd_rct(x))
 }
 
 #' @export
 #' @importFrom grDevices as.raster
-as.raster.wk_grd_rct <- function(x, ..., native = NA) {
+as.raster.grd_rct <- function(x, ..., native = NA) {
   # as.raster() works when values are [0..1]. We can emulate
   # this default by rescaling the image data if it's not already
   # a raster or nativeRaster.

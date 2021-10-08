@@ -50,12 +50,12 @@ grd_subset <- function(grid, i = NULL, j = NULL, ...) {
 }
 
 #' @export
-grd_subset.wk_grd_rct <- function(grid, i = NULL, j = NULL, ...) {
+grd_subset.grd_rct <- function(grid, i = NULL, j = NULL, ...) {
   grd_subset_grd_internal(grid, i, j)
 }
 
 #' @export
-grd_subset.wk_grd_xy <- function(grid, i = NULL, j = NULL, ...) {
+grd_subset.grd_xy <- function(grid, i = NULL, j = NULL, ...) {
   grd_subset_grd_internal(grid, i, j)
 }
 
@@ -81,7 +81,7 @@ grd_subset_grd_internal <- function(grid, i = NULL, j = NULL) {
   if (!is.finite(rct_new$xmax - rct_new$xmin)) {
     rct_new$xmin <- Inf
     rct_new$xmax <- -Inf
-  } else if (inherits(grid, "wk_grd_rct")) {
+  } else if (inherits(grid, "grd_rct")) {
     rct_new$xmin <- rct_new$xmin - dx / 2
     rct_new$xmax <- rct_new$xmax + dx / 2
   }
@@ -89,7 +89,7 @@ grd_subset_grd_internal <- function(grid, i = NULL, j = NULL) {
   if (!is.finite(rct_new$ymax - rct_new$ymin)) {
     rct_new$ymin <- Inf
     rct_new$ymax <- -Inf
-  } else if (inherits(grid, "wk_grd_rct")) {
+  } else if (inherits(grid, "grd_rct")) {
     rct_new$ymin <- rct_new$ymin - dy / 2
     rct_new$ymax <- rct_new$ymax + dy / 2
   }
@@ -138,7 +138,7 @@ grd_crop <- function(grid, bbox, ..., snap = list(ceiling, floor)) {
 
 #' @rdname grd_subset
 #' @export
-grd_crop.wk_grd_rct <- function(grid, bbox, ..., snap = grd_snap_previous) {
+grd_crop.grd_rct <- function(grid, bbox, ..., snap = grd_snap_previous) {
   ij <- grd_index_range(grid, bbox, snap = snap)
 
   ij$i["start"] <- max(ij$i["start"], 0L)
@@ -151,7 +151,7 @@ grd_crop.wk_grd_rct <- function(grid, bbox, ..., snap = grd_snap_previous) {
 
 #' @rdname grd_subset
 #' @export
-grd_crop.wk_grd_xy <- function(grid, bbox, ..., snap = list(ceiling, floor)) {
+grd_crop.grd_xy <- function(grid, bbox, ..., snap = list(ceiling, floor)) {
   ij <- grd_index_range(grid, bbox, snap = snap)
 
   ij$i["start"] <- max(ij$i["start"], 0L)
@@ -170,13 +170,13 @@ grd_extend <- function(grid, bbox, ..., snap = list(ceiling, floor)) {
 
 #' @rdname grd_subset
 #' @export
-grd_extend.wk_grd_rct <- function(grid, bbox, ..., snap = list(grd_snap_next, grd_snap_previous)) {
+grd_extend.grd_rct <- function(grid, bbox, ..., snap = list(grd_snap_next, grd_snap_previous)) {
   grd_subset(grid, grd_index_range(grid, bbox, snap = snap))
 }
 
 #' @rdname grd_subset
 #' @export
-grd_extend.wk_grd_xy <- function(grid, bbox, ..., snap = list(ceiling, floor)) {
+grd_extend.grd_xy <- function(grid, bbox, ..., snap = list(ceiling, floor)) {
   grd_subset(grid, grd_index_range(grid, bbox, snap = snap))
 }
 
@@ -187,7 +187,7 @@ grd_index <- function(grid, point, ..., snap = grd_snap_next) {
 }
 
 #' @export
-grd_index.wk_grd_rct <- function(grid, point, ..., snap = grd_snap_next) {
+grd_index.grd_rct <- function(grid, point, ..., snap = grd_snap_next) {
   s <- grd_summary(grid)
   point <- unclass(as_xy(point))
   i <- if (s$width == -Inf) rep(NA_real_, length(point$x)) else (s$ymax - point$y) / s$dy
@@ -196,7 +196,7 @@ grd_index.wk_grd_rct <- function(grid, point, ..., snap = grd_snap_next) {
 }
 
 #' @export
-grd_index.wk_grd_xy <- function(grid, point, ..., snap = grd_snap_next) {
+grd_index.grd_xy <- function(grid, point, ..., snap = grd_snap_next) {
   grd_index(as_grd_rct(grid), point, snap = snap)
 }
 
@@ -253,7 +253,7 @@ grd_cell_bounds <- function(grid, i, j = NULL, ...) {
 
 #' @rdname grd_subset
 #' @export
-grd_cell_bounds.wk_grd_rct <- function(grid, i, j = NULL, ..., out_of_bounds = "keep") {
+grd_cell_bounds.grd_rct <- function(grid, i, j = NULL, ..., out_of_bounds = "keep") {
   s <- grd_summary(grid)
 
   # non-numeric values don't make sense here because i and j are vectorized
@@ -279,7 +279,7 @@ grd_cell_bounds.wk_grd_rct <- function(grid, i, j = NULL, ..., out_of_bounds = "
 
 #' @rdname grd_subset
 #' @export
-grd_cell_bounds.wk_grd_xy <- function(grid, i, j = NULL, ..., out_of_bounds = "keep") {
+grd_cell_bounds.grd_xy <- function(grid, i, j = NULL, ..., out_of_bounds = "keep") {
   grd_cell_bounds(as_grd_rct(grid), i, j, out_of_bounds = out_of_bounds)
 }
 
@@ -291,7 +291,7 @@ grd_cell_center <- function(grid, i, j = NULL, ...) {
 
 #' @rdname grd_subset
 #' @export
-grd_cell_center.wk_grd_rct <- function(grid, i, j = NULL, ..., out_of_bounds = "keep") {
+grd_cell_center.grd_rct <- function(grid, i, j = NULL, ..., out_of_bounds = "keep") {
   s <- grd_summary(grid)
 
   # non-numeric values don't make sense here because i and j are vectorized
@@ -315,7 +315,7 @@ grd_cell_center.wk_grd_rct <- function(grid, i, j = NULL, ..., out_of_bounds = "
 
 #' @rdname grd_subset
 #' @export
-grd_cell_center.wk_grd_xy <- function(grid, i, j = NULL, ..., out_of_bounds = "keep") {
+grd_cell_center.grd_xy <- function(grid, i, j = NULL, ..., out_of_bounds = "keep") {
   grd_cell_center(as_grd_rct(grid), i, j, out_of_bounds = out_of_bounds)
 }
 

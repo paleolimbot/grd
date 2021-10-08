@@ -17,14 +17,14 @@
 #' plot(grd_rct(volcano))
 #' plot(grd_xy(volcano))
 #'
-plot.wk_grd_xy <- function(x, ...) {
+plot.grd_xy <- function(x, ...) {
   plot(as_xy(x), ...)
   invisible(x)
 }
 
-#' @rdname plot.wk_grd_xy
+#' @rdname plot.grd_xy
 #' @export
-plot.wk_grd_rct <- function(x, ...,
+plot.grd_rct <- function(x, ...,
                             image = NULL,
                             interpolate = FALSE,
                             border = NA,
