@@ -14,12 +14,7 @@
 #'   is always 1-based and always starts from the left and top of
 #'   the bounding box regardless of internal data ordering. A
 #'   `list()` containing `i` and `j` elements can also be supplied.
-#' @param bbox A bounding box to use as a subset. This is used
-#'   to calculate a suitable `y` and `x` index vector representing
-#'   all cells that intersect the `bbox`. Cells that only touch `bbox`
-#'   on the bottom and right are not included in the subset, meaning you
-#'   can safely tile a regularly-spaced grid along `grid` without
-#'   double-counting cells.
+#' @param bbox An [rct()] object.
 #' @param out_of_bounds One of 'keep', 'censor', 'discard', or 'squish'
 #' @param point A [handleable][wk_handle] of points.
 #' @param snap A function that transforms real-valued indices to integer
@@ -94,40 +89,9 @@ grd_subset_grd_internal <- function(grid, i = NULL, j = NULL) {
     rct_new$ymax <- rct_new$ymax + dy / 2
   }
 
-  grid$data <- grd_subset_data(grid$data, i, j)
+  grid$data <- grd_data_subset(grid$data, i, j)
   grid$bbox <- new_wk_rct(rct_new, crs = wk_crs(grid))
   grid
-}
-
-#' @rdname grd_subset
-#' @export
-grd_subset_data <- function(grid_data, i = NULL, j = NULL, ...) {
-  UseMethod("grd_subset_data")
-}
-
-#' @export
-grd_subset_data.default <- function(grid_data, i = NULL, j = NULL, ...) {
-  ij <- ij_from_args(i, j)
-  ij$i <- ij_expand_one(ij$i, dim(grid_data)[1], out_of_bounds = "censor")
-  ij$j <- ij_expand_one(ij$j, dim(grid_data)[2], out_of_bounds = "censor")
-
-  # special case the nativeRaster, whose dims are lying about
-  # the ordering needed to index it
-  if (inherits(grid_data, "nativeRaster")) {
-    attrs <- attributes(grid_data)
-    dim(grid_data) <- rev(dim(grid_data))
-    grid_data <- grid_data[ij$j, ij$i, drop = FALSE]
-    attrs$dim <- rev(dim(grid_data))
-    attributes(grid_data) <- attrs
-    grid_data
-  } else {
-    # we want to keep everything for existing dimensions
-    # this means generating a list of missings to fill
-    # the correct number of additional dimensions
-    n_more_dims <- length(dim(grid_data)) - 2L
-    more_dims <- alist(1, )[rep(2, n_more_dims)]
-    do.call("[", c(list(grid_data, ij$i, ij$j), more_dims, list(drop = FALSE)))
-  }
 }
 
 #' @rdname grd_subset

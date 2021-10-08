@@ -2,7 +2,6 @@
 % Please edit documentation in R/subset.R
 \name{grd_subset}
 \alias{grd_subset}
-\alias{grd_subset_data}
 \alias{grd_crop}
 \alias{grd_crop.grd_rct}
 \alias{grd_crop.grd_xy}
@@ -20,8 +19,6 @@
 \title{Subset grd grids}
 \usage{
 grd_subset(grid, i = NULL, j = NULL, ...)
-
-grd_subset_data(grid_data, i = NULL, j = NULL, ...)
 
 grd_crop(grid, bbox, ..., snap = list(ceiling, floor))
 
@@ -64,15 +61,7 @@ the bounding box regardless of internal data ordering. A
 
 \item{...}{Passed to subset methods}
 
-\item{grid_data}{The \verb{$data} member of a \code{\link[=grd_xy]{grd_xy()}}, \code{\link[=grd_rct]{grd_rct()}},
-or other object implementing \verb{grd_*()} methods.}
-
-\item{bbox}{A bounding box to use as a subset. This is used
-to calculate a suitable \code{y} and \code{x} index vector representing
-all cells that intersect the \code{bbox}. Cells that only touch \code{bbox}
-on the bottom and right are not included in the subset, meaning you
-can safely tile a regularly-spaced grid along \code{grid} without
-double-counting cells.}
+\item{bbox}{An \code{\link[=rct]{rct()}} object.}
 
 \item{snap}{A function that transforms real-valued indices to integer
 indices (e.g., \code{\link[=floor]{floor()}}, \code{\link[=ceiling]{ceiling()}}, or \code{\link[=round]{round()}}).

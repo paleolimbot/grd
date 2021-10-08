@@ -283,19 +283,10 @@ new_grd <- function(x, subclass = character()) {
 #'
 #' @param grid A [grd_xy()], [grd_rct()], or other object
 #'   implementing `grd_*()` methods.
-#' @param grid_data The `$data` member of a [grd_xy()], [grd_rct()],
-#'   or other object implementing `grd_*()` methods.
-#'
 #' @return
 #'   - `grd_summary()` returns a `list()` with components
 #'     `xmin`, `ymin`, `xmax`, `ymax`,
 #'     `nx`, `ny`, `dx`, `dy`, `width`, and `height`.
-#'   - `grd_data_order()` returns `c("y", "x")` for
-#'     data with a column-major internal ordering and
-#'     `c("x", "y")` for data with a row-major internal
-#'     ordering. Both 'x' and 'y' can be modified with
-#'     a negative sign to indicate right-to-left
-#'     or bottom-to-top ordering, respectively.
 #' @export
 #'
 #' @examples
@@ -351,22 +342,6 @@ grd_summary.grd_xy <- function(grid) {
     width = width,
     height = height
   )
-}
-
-#' @rdname grd_summary
-#' @export
-grd_data_order <- function(grid_data) {
-  UseMethod("grd_data_order")
-}
-
-#' @export
-grd_data_order.default <- function(grid_data) {
-  c("y", "x")
-}
-
-#' @export
-grd_data_order.nativeRaster <- function(grid_data) {
-  c("x", "y")
 }
 
 # interface for wk methods
