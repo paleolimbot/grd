@@ -153,8 +153,3 @@ test_that("crop/extend works for grd_xy", {
   grid <- grd(nx = 2, ny = 1, type = "corners")
   expect_identical(grd_crop(grid, grid$bbox), grid)
 })
-
-test_that("snap functions work as expected", {
-  expect_identical(grd_snap_next(seq(0, 1, 0.25)), c(0, 0, 1, 1, 1))
-  expect_identical(grd_snap_previous(seq(0, 1, 0.25)), c(0, 0, 0, 1, 1))
-})
