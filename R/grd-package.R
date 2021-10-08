@@ -5,8 +5,7 @@
 # The following block is used by usethis to automatically manage
 # roxygen namespace tags. Modify with care!
 ## usethis namespace: start
-#' @importFrom wk rct xy wk_crs wk_set_crs as_rct as_xy wk_bbox wk_vertices new_wk_rct
-#' @importFrom wk wk_affine_identity as_wkb
+#' @import wk
 ## usethis namespace: end
 NULL
 
