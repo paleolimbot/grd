@@ -42,12 +42,15 @@ Values outside the range \code{1:nrow|ncol(data)} will be censored to
 \item \code{grd_data()} returns the data member of a \code{\link[=grd]{grd()}}.
 \item \code{grd_data_subset()} returns a subset of the data independent of the
 parent \code{\link[=grd]{grd()}} but using the same indexing rules as \code{\link[=grd_subset]{grd_subset()}}.
+The non-xy dimensions of \code{grid_data} are not affected.
 \item \code{grd_data_order()} returns \code{c("y", "x")} for
 data with a column-major internal ordering and
 \code{c("x", "y")} for data with a row-major internal
 ordering. Both 'x' and 'y' can be modified with
 a negative sign to indicate right-to-left
-or bottom-to-top ordering, respectively.
+or bottom-to-top internal ordering, respectively. This values
+does not affect the axis order or axis direction used to index
+in \code{\link[=grd_subset]{grd_subset()}} or \code{\link[=grd_data_subset]{grd_data_subset()}}.
 }
 }
 \description{

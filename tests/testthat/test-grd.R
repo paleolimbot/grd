@@ -25,16 +25,6 @@ test_that("grd_xy() works for an empty grid", {
   expect_identical(wk_bbox(empty), wk_bbox(xy(crs = NULL)))
 })
 
-test_that("nativeRaster backed grd objects have correct data_order", {
-  col_native <- structure(
-    c(-16777216L, -13421773L, -10066330L, -15066598L, -11711155L, -8355712L),
-    .Dim = 2:3,
-    class = "nativeRaster"
-  )
-  grd_native <- grd_rct(col_native)
-  expect_identical(grd_native$data_order, c("x", "y"))
-})
-
 test_that("grd_xy() works for h/v lines", {
   hline <- grd_xy(matrix(nrow = 10, ncol = 1), rct(0, 0, 0, 1))
   expect_identical(wk_bbox(hline), rct(0, 0, 0, 1))
@@ -122,7 +112,7 @@ test_that("as_xy() works for grd objects", {
   grid <- grd_xy(data)
 
   # order should match the internal ordering of data
-  # (row major unless specified)
+  # (column major unless specified)
   expect_identical(
     as_xy(grd_xy(data)),
     c(
@@ -154,12 +144,12 @@ test_that("as_xy() works for grd objects", {
 
 test_that("as_xy() works for row-major grd objects", {
   grid_empty <- grd(nx = 0, ny = 0)
-  grid_empty$data_order <- c("x", "y")
+  attr(grid_empty$data, "grd_data_order") <- c("x", "y")
   expect_identical(as_xy(grid_empty), xy(crs = NULL))
 
   data <- matrix(0:5, nrow = 2, ncol = 3)
   grid <- grd_xy(data)
-  grid$data_order <- c("x", "y")
+  attr(grid$data, "grd_data_order") <- c("x", "y")
 
   expect_identical(
     as_xy(grid),
@@ -179,7 +169,7 @@ test_that("as_xy() works for row-major grd objects", {
 test_that("as_xy() works for flipped grd objects", {
   data <- matrix(0:5, nrow = 2, ncol = 3)
   grid <- grd_xy(data)
-  grid$data_order <- c("-y", "-x")
+  attr(grid$data, "grd_data_order") <- c("-y", "-x")
 
   expect_identical(
     as_xy(grid),
@@ -193,8 +183,7 @@ test_that("as_xy() works for flipped grd objects", {
     )
   )
 
-  grid$data_order <- c("-x", "-y")
-
+  attr(grid$data, "grd_data_order") <- c("-x", "-y")
   expect_identical(
     as_xy(grid),
     c(
@@ -216,7 +205,7 @@ test_that("as_rct() works for grd objects", {
   grid <- grd_rct(data)
 
   # order should match the internal ordering of data
-  # (row major unless specified)
+  # (column major unless specified)
   expect_identical(
     as_rct(grid),
     c(
@@ -246,12 +235,12 @@ test_that("as_rct() works for grd objects", {
 
 test_that("as_rct() works for row-major grd objects", {
   grid_empty <- grd(nx = 0, ny = 0)
-  grid_empty$data_order <- c("x", "y")
+  attr(grid_empty$data, "grd_data_order") <- c("x", "y")
   expect_identical(as_rct(grid_empty), rct(crs = NULL))
 
   data <- matrix(0:5, nrow = 2, ncol = 3)
   grid <- grd_rct(data)
-  grid$data_order <- c("x", "y")
+  attr(grid$data, "grd_data_order") <- c("x", "y")
 
   # order should match the internal ordering of data
   # (row major unless specified)
@@ -273,7 +262,7 @@ test_that("as_rct() works for row-major grd objects", {
 test_that("as_rct() works for flipped grd objects", {
   data <- matrix(0:5, nrow = 2, ncol = 3)
   grid <- grd_rct(data)
-  grid$data_order <- c("-y", "-x")
+  attr(grid$data, "grd_data_order") <- c("-y", "-x")
 
   # order should match the internal ordering of data
   # (row major unless specified)
@@ -289,7 +278,7 @@ test_that("as_rct() works for flipped grd objects", {
     )
   )
 
-  grid$data_order <- c("-x", "-y")
+  attr(grid$data, "grd_data_order") <- c("-x", "-y")
 
   # order should match the internal ordering of data
   # (row major unless specified)
@@ -338,10 +327,6 @@ test_that("grd[[]]<- interface works", {
   grid[["data"]] <- matrix()
   expect_identical(grid, grd_rct(matrix(), rct(0, 0, 1, 1)))
 
-  grid[["data_order"]] <- c("x", "y")
-  expect_identical(grid$data_order, c("x", "y"))
-  expect_error(grid[["data_order"]] <- c("x", "y", "z"), "element 'data_order' must be")
-
   expect_error(grid[["not_data_or_bbox"]] <- NULL, "Can't set element")
 })
 
@@ -353,10 +338,6 @@ test_that("grd$<- interface works", {
 
   grid$data <- matrix()
   expect_identical(grid, grd_rct(matrix(), rct(0, 0, 1, 1)))
-
-  grid$data_order <- c("x", "y")
-  expect_identical(grid$data_order, c("x", "y"))
-  expect_error(grid$data_order <- c("x", "y", "z"), "element 'data_order' must be")
 
   expect_error(grid$not_data_or_bbox <- NULL, "Can't set element")
 })

@@ -137,7 +137,6 @@ grd <- function(bbox = NULL, nx = NULL, ny = NULL, dx = NULL, dy = NULL,
 #' @export
 grd_rct <- function(data, bbox = rct(0, 0, dim(data)[2], dim(data)[1])) {
   bbox <- if (inherits(bbox, "wk_rct")) bbox else wk_bbox(bbox)
-  data_order <- grd_data_order(data)
 
   # normalize data and bbox so that max > min
   normalized <- grd_internal_normalize(data, bbox)
@@ -158,14 +157,13 @@ grd_rct <- function(data, bbox = rct(0, 0, dim(data)[2], dim(data)[1])) {
 
   bbox <- new_wk_rct(rct, crs = wk_crs(bbox))
 
-  new_grd(list(data = data, bbox = bbox, data_order = data_order), "grd_rct")
+  new_grd(list(data = data, bbox = bbox), "grd_rct")
 }
 
 #' @rdname grd
 #' @export
 grd_xy <- function(data, bbox = rct(0, 0, dim(data)[2] - 1, dim(data)[1] - 1)) {
   bbox <- if (inherits(bbox, "wk_rct")) bbox else wk_bbox(bbox)
-  data_order <- grd_data_order(data)
 
   # normalize data and bbox so that max > min
   normalized <- grd_internal_normalize(data, bbox)
@@ -200,7 +198,7 @@ grd_xy <- function(data, bbox = rct(0, 0, dim(data)[2] - 1, dim(data)[1] - 1)) {
     )
   }
 
-  new_grd(list(data = data, bbox = bbox, data_order = data_order), "grd_xy")
+  new_grd(list(data = data, bbox = bbox), "grd_xy")
 }
 
 #' @rdname grd
@@ -229,9 +227,7 @@ as_grd_rct.grd_xy <- function(x, ...) {
     crs = wk_crs(x$bbox)
   )
 
-  grd <- grd_rct(x$data, bbox = bbox)
-  grd$data_order <- x$data_order
-  grd
+  grd_rct(x$data, bbox = bbox)
 }
 
 #' @rdname grd
@@ -260,9 +256,7 @@ as_grd_xy.grd_rct <- function(x, ...) {
     crs = wk_crs(x$bbox)
   )
 
-  grd <- grd_xy(x$data, bbox = bbox)
-  grd$data_order <- x$data_order
-  grd
+  grd_xy(x$data, bbox = bbox)
 }
 
 #' S3 details for grid objects
@@ -393,15 +387,6 @@ wk_set_crs.grd <- function(x, crs) {
     }
 
     x_bare$bbox <- value
-  } else if(identical(i, "data_order")) {
-    if (setequal(gsub("^[+-]", "", value), c("x", "y"))) {
-      x_bare$data_order <- value
-    } else {
-      stop(
-        "element 'data_order' must be `c(\"[-]y\", \"[-]x\")` or `c(\"[-]x\", \"[-]y\")`",
-        call. = FALSE
-      )
-    }
   } else {
     stop("Can't set element of a grd that is not 'data' or 'bbox'", call. = FALSE)
   }
@@ -500,14 +485,15 @@ as_xy.grd_xy <- function(x, ...) {
   }
 
   # ordering such that values match up to internal data ordering
-  data_order <- gsub("^[+-]", "", x$data_order)
+  x_data_order <- grd_data_order(x$data)
+  data_order <- gsub("^[+-]", "", x_data_order)
 
   if (identical(data_order, c("y", "x"))) {
-    if (startsWith(x$data_order[1], "-")) {
+    if (startsWith(x_data_order[1], "-")) {
       ys <- rev(ys)
     }
 
-    if (startsWith(x$data_order[2], "-")) {
+    if (startsWith(x_data_order[2], "-")) {
       xs <- rev(xs)
     }
 
@@ -517,11 +503,11 @@ as_xy.grd_xy <- function(x, ...) {
       crs = wk_crs(x$bbox)
     )
   } else {
-    if (startsWith(x$data_order[2], "-")) {
+    if (startsWith(x_data_order[2], "-")) {
       ys <- rev(ys)
     }
 
-    if (startsWith(x$data_order[1], "-")) {
+    if (startsWith(x_data_order[1], "-")) {
       xs <- rev(xs)
     }
 
@@ -549,10 +535,11 @@ as_rct.grd_rct <- function(x, ...) {
   xs <- seq(rct$xmin, rct$xmax, by = width / nx)
   ys <- seq(rct$ymax, rct$ymin, by = -height / ny)
 
-  data_order <- gsub("^[+-]", "", x$data_order)
+  x_data_order <- grd_data_order(x$data)
+  data_order <- gsub("^[+-]", "", x_data_order)
 
   if (identical(data_order, c("y", "x"))) {
-    if (startsWith(x$data_order[1], "-")) {
+    if (startsWith(x_data_order[1], "-")) {
       ys <- rev(ys)
       ymax <- rep(ys[-1], nx)
       ymin <- rep(ys[-length(ys)], nx)
@@ -561,7 +548,7 @@ as_rct.grd_rct <- function(x, ...) {
       ymax <- rep(ys[-length(ys)], nx)
     }
 
-    if (startsWith(x$data_order[2], "-")) {
+    if (startsWith(x_data_order[2], "-")) {
       xs <- rev(xs)
       xmax <- rep(xs[-length(xs)], each = ny)
       xmin <- rep(xs[-1], each = ny)
@@ -572,7 +559,7 @@ as_rct.grd_rct <- function(x, ...) {
 
     rct(xmin, ymin, xmax, ymax, crs = wk_crs(x$bbox))
   } else {
-    if (startsWith(x$data_order[2], "-")) {
+    if (startsWith(x_data_order[2], "-")) {
       ys <- rev(ys)
       ymax <- rep(ys[-1], each = nx)
       ymin <- rep(ys[-length(ys)], each = nx)
@@ -581,7 +568,7 @@ as_rct.grd_rct <- function(x, ...) {
       ymax <- rep(ys[-length(ys)], each = nx)
     }
 
-    if (startsWith(x$data_order[1], "-")) {
+    if (startsWith(x_data_order[1], "-")) {
       xs <- rev(xs)
       xmax <- rep(xs[-length(xs)], ny)
       xmin <- rep(xs[-1], ny)
