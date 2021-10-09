@@ -16,8 +16,8 @@ grd_snap_previous(x)
 A vector of integer indices
 }
 \description{
-These functions can be used in \code{\link[=grd_index]{grd_index()}} and
-\code{\link[=grd_index_range]{grd_index_range()}}. These functions differ in the way
+These functions can be used in \code{\link[=grd_cell]{grd_cell()}} and
+\code{\link[=grd_cell_range]{grd_cell_range()}}. These functions differ in the way
 they round 0.5: \code{\link[=grd_snap_next]{grd_snap_next()}} always rounds up
 and \code{\link[=grd_snap_previous]{grd_snap_previous()}} always rounds down. You can
 also use \code{\link[=floor]{floor()}} and \code{\link[=ceiling]{ceiling()}} as index

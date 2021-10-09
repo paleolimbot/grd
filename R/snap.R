@@ -1,8 +1,8 @@
 
 #' Index snap functions
 #'
-#' These functions can be used in [grd_index()] and
-#' [grd_index_range()]. These functions differ in the way
+#' These functions can be used in [grd_cell()] and
+#' [grd_cell_range()]. These functions differ in the way
 #' they round 0.5: [grd_snap_next()] always rounds up
 #' and [grd_snap_previous()] always rounds down. You can
 #' also use [floor()] and [ceiling()] as index

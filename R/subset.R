@@ -7,7 +7,7 @@
 #' a [grd_subset()] is always a [grd()] of the same type whose
 #' relationship to x-y space has not changed.
 #'
-#' @inheritParams grd_index
+#' @inheritParams grd_cell
 #' @inheritParams grd_data
 #' @param ... Passed to subset methods
 #'
@@ -91,7 +91,7 @@ grd_subset_grd_internal <- function(grid, i = NULL, j = NULL) {
 #' @export
 grd_crop.grd_rct <- function(grid, bbox, ..., snap = NULL) {
   snap <- snap %||% list(grd_snap_next, grd_snap_previous)
-  ij <- grd_index_range(grid, bbox, snap = snap)
+  ij <- grd_cell_range(grid, bbox, snap = snap)
 
   ij$i["start"] <- max(ij$i["start"], 0L)
   ij$i["stop"] <- min(ij$i["stop"], dim(grid)[1])
@@ -105,7 +105,7 @@ grd_crop.grd_rct <- function(grid, bbox, ..., snap = NULL) {
 #' @export
 grd_crop.grd_xy <- function(grid, bbox, ..., snap = NULL) {
   snap <- snap %||% list(ceiling, floor)
-  ij <- grd_index_range(grid, bbox, snap = snap)
+  ij <- grd_cell_range(grid, bbox, snap = snap)
 
   ij$i["start"] <- max(ij$i["start"], 0L)
   ij$i["stop"] <- min(ij$i["stop"], dim(grid)[1])
@@ -119,12 +119,12 @@ grd_crop.grd_xy <- function(grid, bbox, ..., snap = NULL) {
 #' @export
 grd_extend.grd_rct <- function(grid, bbox, ..., snap = NULL) {
   snap <- snap %||% list(grd_snap_next, grd_snap_previous)
-  grd_subset(grid, grd_index_range(grid, bbox, snap = snap))
+  grd_subset(grid, grd_cell_range(grid, bbox, snap = snap))
 }
 
 #' @rdname grd_subset
 #' @export
 grd_extend.grd_xy <- function(grid, bbox, ..., snap = NULL) {
   snap <- snap %||% list(ceiling, floor)
-  grd_subset(grid, grd_index_range(grid, bbox, snap = snap))
+  grd_subset(grid, grd_cell_range(grid, bbox, snap = snap))
 }

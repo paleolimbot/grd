@@ -8,16 +8,16 @@
 #' @param point A [handleable][wk_handle] of points.
 #' @param snap A function that transforms real-valued indices to integer
 #'   indices (e.g., [floor()], [ceiling()], or [round()]).
-#'   For [grd_index_range()], a `list()` with exactly two elements to be called
+#'   For [grd_cell_range()], a `list()` with exactly two elements to be called
 #'   for the minimum and maximum index values, respectively.
 #' @param ... Unused
 #'
 #' @return
-#'   - `grd_index()`: returns a `list(i, j)` of index values corresponding
+#'   - `grd_cell()`: returns a `list(i, j)` of index values corresponding
 #'     to the input points and adjusted according to `snap`. Index values
 #'     will be outside `dim(grid)` for points outside `wk_bbox(grid)` including
 #'     negative values.
-#'   - `grd_index_range()` returns a slice describing the range of indices
+#'   - `grd_cell_range()` returns a slice describing the range of indices
 #'     in the `i` and `j` directions.
 #'   - `grd_cell_bounds()` returns a [wk::rct()] of the cell extent at `i, j`.
 #'   - `grd_cell_center()` returns a [wk::xy()] of the cell center at `i, j`.
@@ -25,17 +25,17 @@
 #'
 #' @examples
 #' grid <- grd(nx = 3, ny = 2)
-#' grd_index(grid, xy(0.5, 0.5))
-#' grd_index_range(grid, grid$bbox)
+#' grd_cell(grid, xy(0.5, 0.5))
+#' grd_cell_range(grid, grid$bbox)
 #' grd_cell_bounds(grid, 1, 1)
 #' grd_cell_center(grid, 1, 1)
 #'
-grd_index <- function(grid, point, ..., snap = grd_snap_next) {
-  UseMethod("grd_index")
+grd_cell <- function(grid, point, ..., snap = grd_snap_next) {
+  UseMethod("grd_cell")
 }
 
 #' @export
-grd_index.grd_rct <- function(grid, point, ..., snap = grd_snap_next) {
+grd_cell.grd_rct <- function(grid, point, ..., snap = grd_snap_next) {
   s <- grd_summary(grid)
   point <- unclass(as_xy(point))
   i <- if (s$width == -Inf) rep(NA_real_, length(point$x)) else (s$ymax - point$y) / s$dy
@@ -44,18 +44,18 @@ grd_index.grd_rct <- function(grid, point, ..., snap = grd_snap_next) {
 }
 
 #' @export
-grd_index.grd_xy <- function(grid, point, ..., snap = grd_snap_next) {
-  grd_index(as_grd_rct(grid), point, snap = snap)
+grd_cell.grd_xy <- function(grid, point, ..., snap = grd_snap_next) {
+  grd_cell(as_grd_rct(grid), point, snap = snap)
 }
 
-#' @rdname grd_index
+#' @rdname grd_cell
 #' @export
-grd_index_range <- function(grid, bbox, ..., snap = grd_snap_next) {
-  UseMethod("grd_index_range")
+grd_cell_range <- function(grid, bbox, ..., snap = grd_snap_next) {
+  UseMethod("grd_cell_range")
 }
 
 #' @export
-grd_index_range.default <- function(grid, bbox, ..., snap = grd_snap_next) {
+grd_cell_range.default <- function(grid, bbox, ..., snap = grd_snap_next) {
   # normalized so that xmin < xmax, ymin < ymax
   if (inherits(bbox, "wk_rct")) {
     bbox <- wk_bbox(as_wkb(bbox))
@@ -67,7 +67,7 @@ grd_index_range.default <- function(grid, bbox, ..., snap = grd_snap_next) {
     snap <- list(snap, snap)
   }
 
-  indices <- grd_index(grid, as_xy(wk_vertices(bbox)))
+  indices <- grd_cell(grid, as_xy(wk_vertices(bbox)))
 
   # return a consistent value for an empty grid subset
   s <- grd_summary(grid)
@@ -75,8 +75,8 @@ grd_index_range.default <- function(grid, bbox, ..., snap = grd_snap_next) {
   rct_target_width <- rct_target$xmax - rct_target$xmin
   rct_target_height <- rct_target$ymax - rct_target$ymin
 
-  indices_min <- grd_index(grid, xy(rct_target$xmin, rct_target$ymax), snap = snap[[1]])
-  indices_max <- grd_index(grid, xy(rct_target$xmax, rct_target$ymin), snap = snap[[2]])
+  indices_min <- grd_cell(grid, xy(rct_target$xmin, rct_target$ymax), snap = snap[[1]])
+  indices_max <- grd_cell(grid, xy(rct_target$xmax, rct_target$ymin), snap = snap[[2]])
 
   if (rct_target_height == -Inf || s$height == -Inf) {
     i <- integer()
@@ -93,13 +93,13 @@ grd_index_range.default <- function(grid, bbox, ..., snap = grd_snap_next) {
   list(i = i, j = j)
 }
 
-#' @rdname grd_index
+#' @rdname grd_cell
 #' @export
 grd_cell_bounds <- function(grid, i, j = NULL, ...) {
   UseMethod("grd_cell_bounds")
 }
 
-#' @rdname grd_index
+#' @rdname grd_cell
 #' @export
 grd_cell_bounds.grd_rct <- function(grid, i, j = NULL, ..., out_of_bounds = "keep") {
   s <- grd_summary(grid)
@@ -125,19 +125,19 @@ grd_cell_bounds.grd_rct <- function(grid, i, j = NULL, ..., out_of_bounds = "kee
   rct(xmin, ymin, xmax, ymax, crs = wk_crs(grid))
 }
 
-#' @rdname grd_index
+#' @rdname grd_cell
 #' @export
 grd_cell_bounds.grd_xy <- function(grid, i, j = NULL, ..., out_of_bounds = "keep") {
   grd_cell_bounds(as_grd_rct(grid), i, j, out_of_bounds = out_of_bounds)
 }
 
-#' @rdname grd_index
+#' @rdname grd_cell
 #' @export
 grd_cell_center <- function(grid, i, j = NULL, ...) {
   UseMethod("grd_cell_center")
 }
 
-#' @rdname grd_index
+#' @rdname grd_cell
 #' @export
 grd_cell_center.grd_rct <- function(grid, i, j = NULL, ..., out_of_bounds = "keep") {
   s <- grd_summary(grid)
@@ -161,7 +161,7 @@ grd_cell_center.grd_rct <- function(grid, i, j = NULL, ..., out_of_bounds = "kee
   xy(x, y, crs = wk_crs(grid))
 }
 
-#' @rdname grd_index
+#' @rdname grd_cell
 #' @export
 grd_cell_center.grd_xy <- function(grid, i, j = NULL, ..., out_of_bounds = "keep") {
   grd_cell_center(as_grd_rct(grid), i, j, out_of_bounds = out_of_bounds)

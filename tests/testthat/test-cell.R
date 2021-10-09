@@ -1,42 +1,42 @@
 
-test_that("grd_index() works for grd_rct()", {
+test_that("grd_cell() works for grd_rct()", {
   empty <- grd_rct(matrix(nrow = 0, ncol = 0))
-  expect_identical(grd_index(empty, xy(0, 0)), data.frame(i = NA_integer_, j = NA_integer_))
+  expect_identical(grd_cell(empty, xy(0, 0)), data.frame(i = NA_integer_, j = NA_integer_))
 
   grid <- grd_rct(volcano)
-  expect_identical(grd_index(grid, xy(NA, NA)), data.frame(i = NA_integer_, j = NA_integer_))
+  expect_identical(grd_cell(grid, xy(NA, NA)), data.frame(i = NA_integer_, j = NA_integer_))
 
-  expect_identical(grd_index(grid, xy(0.5, 0.5)), data.frame(i = 87, j = 1))
-  expect_identical(grd_index(grid, xy(0, 87)), data.frame(i = 1, j = 1))
-  expect_identical(grd_index(grid, xy(1, 86)), data.frame(i = 2, j = 2))
-  expect_identical(grd_index(grid, xy(2, 85)), data.frame(i = 3, j = 3))
+  expect_identical(grd_cell(grid, xy(0.5, 0.5)), data.frame(i = 87, j = 1))
+  expect_identical(grd_cell(grid, xy(0, 87)), data.frame(i = 1, j = 1))
+  expect_identical(grd_cell(grid, xy(1, 86)), data.frame(i = 2, j = 2))
+  expect_identical(grd_cell(grid, xy(2, 85)), data.frame(i = 3, j = 3))
 })
 
-test_that("grd_index() works for grd_xy()", {
+test_that("grd_cell() works for grd_xy()", {
   empty <- grd_xy(matrix(nrow = 0, ncol = 0))
-  expect_identical(grd_index(empty, xy(0, 0)), data.frame(i = NA_integer_, j = NA_integer_))
+  expect_identical(grd_cell(empty, xy(0, 0)), data.frame(i = NA_integer_, j = NA_integer_))
 
   grid <- grd_xy(volcano)
-  expect_identical(grd_index(grid, xy(NA, NA)), data.frame(i = NA_integer_, j = NA_integer_))
+  expect_identical(grd_cell(grid, xy(NA, NA)), data.frame(i = NA_integer_, j = NA_integer_))
 
-  expect_identical(grd_index(grid, xy(0, 0)), data.frame(i = 87, j = 1))
+  expect_identical(grd_cell(grid, xy(0, 0)), data.frame(i = 87, j = 1))
 })
 
-test_that("grd_index_range() works for grd_rct()", {
+test_that("grd_cell_range() works for grd_rct()", {
   empty <- grd_rct(matrix(nrow = 0, ncol = 0))
   expect_identical(
-    grd_index_range(empty, rct(0, 0, 1, 1)),
+    grd_cell_range(empty, rct(0, 0, 1, 1)),
     list(i = integer(), j = integer())
   )
 
   grid <- grd_rct(volcano)
   expect_identical(
-    grd_index_range(grid, rct(NA, NA, NA, NA)),
+    grd_cell_range(grid, rct(NA, NA, NA, NA)),
     list(i = integer(), j = integer())
   )
 
   expect_identical(
-    grd_index_range(grid, wk_bbox(grid), snap = list(ceiling, floor)),
+    grd_cell_range(grid, wk_bbox(grid), snap = list(ceiling, floor)),
     list(
       i = c(start = 0, stop = nrow(grid), step = NA_integer_),
       j = c(start = 0, stop = ncol(grid), step = NA_integer_)
@@ -45,7 +45,7 @@ test_that("grd_index_range() works for grd_rct()", {
 
   # bbox with exact boundaries
   expect_identical(
-    grd_index_range(grid, bbox = rct(0, 86, 3, 87), snap = list(ceiling, floor)),
+    grd_cell_range(grid, bbox = rct(0, 86, 3, 87), snap = list(ceiling, floor)),
     list(
       i = c(start = 0, stop = 1, step = NA_integer_),
       j = c(start = 0, stop = 3, step = NA_integer_)
@@ -54,7 +54,7 @@ test_that("grd_index_range() works for grd_rct()", {
 
   # subset by bbox with non-exact boundaries
   expect_identical(
-    grd_index_range(grid, bbox = rct(0.5, 86.1, 2.5, 86.9)),
+    grd_cell_range(grid, bbox = rct(0.5, 86.1, 2.5, 86.9)),
     list(
       i = c(start = 0, stop = 1, step = NA_integer_),
       j = c(start = 0, stop = 3, step = NA_integer_)
@@ -63,26 +63,26 @@ test_that("grd_index_range() works for grd_rct()", {
 
   # subset by arbitrary object with non-exact boundaries
   expect_identical(
-    grd_index_range(grid, bbox = as_wkb(rct(0.5, 86.1, 2.5, 86.9))),
-    grd_index_range(grid, bbox = rct(0.5, 86.1, 2.5, 86.9))
+    grd_cell_range(grid, bbox = as_wkb(rct(0.5, 86.1, 2.5, 86.9))),
+    grd_cell_range(grid, bbox = rct(0.5, 86.1, 2.5, 86.9))
   )
 })
 
-test_that("grd_index_range() works for grd_xy()", {
+test_that("grd_cell_range() works for grd_xy()", {
   empty <- grd_xy(matrix(nrow = 0, ncol = 0))
   expect_identical(
-    grd_index_range(empty, rct(0, 0, 1, 1)),
+    grd_cell_range(empty, rct(0, 0, 1, 1)),
     list(i = integer(), j = integer())
   )
 
   grid <- grd_xy(volcano)
   expect_identical(
-    grd_index_range(grid, rct(NA, NA, NA, NA)),
+    grd_cell_range(grid, rct(NA, NA, NA, NA)),
     list(i = integer(), j = integer())
   )
 
   expect_identical(
-    grd_index_range(grid, wk_bbox(grid)),
+    grd_cell_range(grid, wk_bbox(grid)),
     list(
       i = c(start = 0, stop = nrow(grid), step = NA_integer_),
       j = c(start = 0, stop = ncol(grid), step = NA_integer_)
@@ -91,7 +91,7 @@ test_that("grd_index_range() works for grd_xy()", {
 
   # bbox with exact boundaries
   expect_identical(
-    grd_index_range(grid, bbox = rct(0, 85, 3, 86)),
+    grd_cell_range(grid, bbox = rct(0, 85, 3, 86)),
     list(
       i = c(start = 0, stop = 2, step = NA_integer_),
       j = c(start = 0, stop = 4, step = NA_integer_)
@@ -100,7 +100,7 @@ test_that("grd_index_range() works for grd_xy()", {
 
   # subset by bbox with non-exact boundaries
   expect_identical(
-    grd_index_range(grid, bbox = rct(0.6, 85.9, 2.4, 86.1)),
+    grd_cell_range(grid, bbox = rct(0.6, 85.9, 2.4, 86.1)),
     list(
       i = c(start = 0, stop = 1, step = NA_integer_),
       j = c(start = 1, stop = 3, step = NA_integer_)
@@ -109,8 +109,8 @@ test_that("grd_index_range() works for grd_xy()", {
 
   # subset by arbitrary object with non-exact boundaries
   expect_identical(
-    grd_index_range(grid, bbox = as_wkb(rct(0.5, 86.1, 2.5, 86.9))),
-    grd_index_range(grid, bbox = rct(0.5, 86.1, 2.5, 86.9))
+    grd_cell_range(grid, bbox = as_wkb(rct(0.5, 86.1, 2.5, 86.9))),
+    grd_cell_range(grid, bbox = rct(0.5, 86.1, 2.5, 86.9))
   )
 })
 

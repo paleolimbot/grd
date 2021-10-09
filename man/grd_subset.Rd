@@ -44,7 +44,7 @@ Values outside the range \code{1:nrow|ncol(data)} will be censored to
 
 \item{snap}{A function that transforms real-valued indices to integer
 indices (e.g., \code{\link[=floor]{floor()}}, \code{\link[=ceiling]{ceiling()}}, or \code{\link[=round]{round()}}).
-For \code{\link[=grd_index_range]{grd_index_range()}}, a \code{list()} with exactly two elements to be called
+For \code{\link[=grd_cell_range]{grd_cell_range()}}, a \code{list()} with exactly two elements to be called
 for the minimum and maximum index values, respectively.}
 }
 \value{
