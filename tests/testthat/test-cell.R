@@ -1,25 +1,25 @@
 
 test_that("grd_index() works for grd_rct()", {
   empty <- grd_rct(matrix(nrow = 0, ncol = 0))
-  expect_identical(grd_index(empty, xy(0, 0)), list(i = NA_integer_, j = NA_integer_))
+  expect_identical(grd_index(empty, xy(0, 0)), data.frame(i = NA_integer_, j = NA_integer_))
 
   grid <- grd_rct(volcano)
-  expect_identical(grd_index(grid, xy(NA, NA)), list(i = NA_integer_, j = NA_integer_))
+  expect_identical(grd_index(grid, xy(NA, NA)), data.frame(i = NA_integer_, j = NA_integer_))
 
-  expect_identical(grd_index(grid, xy(0.5, 0.5)), list(i = 87, j = 1))
-  expect_identical(grd_index(grid, xy(0, 87)), list(i = 1, j = 1))
-  expect_identical(grd_index(grid, xy(1, 86)), list(i = 2, j = 2))
-  expect_identical(grd_index(grid, xy(2, 85)), list(i = 3, j = 3))
+  expect_identical(grd_index(grid, xy(0.5, 0.5)), data.frame(i = 87, j = 1))
+  expect_identical(grd_index(grid, xy(0, 87)), data.frame(i = 1, j = 1))
+  expect_identical(grd_index(grid, xy(1, 86)), data.frame(i = 2, j = 2))
+  expect_identical(grd_index(grid, xy(2, 85)), data.frame(i = 3, j = 3))
 })
 
 test_that("grd_index() works for grd_xy()", {
   empty <- grd_xy(matrix(nrow = 0, ncol = 0))
-  expect_identical(grd_index(empty, xy(0, 0)), list(i = NA_integer_, j = NA_integer_))
+  expect_identical(grd_index(empty, xy(0, 0)), data.frame(i = NA_integer_, j = NA_integer_))
 
   grid <- grd_xy(volcano)
-  expect_identical(grd_index(grid, xy(NA, NA)), list(i = NA_integer_, j = NA_integer_))
+  expect_identical(grd_index(grid, xy(NA, NA)), data.frame(i = NA_integer_, j = NA_integer_))
 
-  expect_identical(grd_index(grid, xy(0, 0)), list(i = 87, j = 1))
+  expect_identical(grd_index(grid, xy(0, 0)), data.frame(i = 87, j = 1))
 })
 
 test_that("grd_index_range() works for grd_rct()", {

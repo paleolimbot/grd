@@ -3,6 +3,10 @@
   if (is.null(x)) y else x
 }
 
+new_data_frame <- function(x) {
+  structure(x, row.names = c(NA, length(x[[1]])), class = "data.frame")
+}
+
 recycle_common <- function(...) {
   dots <- list(...)
   lengths <- vapply(dots, length, integer(1))
