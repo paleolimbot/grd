@@ -58,8 +58,8 @@ grd_subset_grd_internal <- function(grid, i = NULL, j = NULL) {
   s <- grd_summary(grid)
   dx <- unname(j["step"] * s$dx)
   dy <- unname(i["step"] * s$dy)
-  center_min <- unclass(grd_cell_center(grid, i["stop"], j["start"] + 1L))
-  center_max <- unclass(grd_cell_center(grid, i["start"] + 1L, j["stop"]))
+  center_min <- unclass(grd_cell_xy(grid, i["stop"], j["start"] + 1L))
+  center_max <- unclass(grd_cell_xy(grid, i["start"] + 1L, j["stop"]))
   rct_new <- list(
     xmin = center_min$x, ymin = center_min$y,
     xmax = center_max$x, ymax = center_max$y

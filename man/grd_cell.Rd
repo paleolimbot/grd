@@ -6,9 +6,9 @@
 \alias{grd_cell_rct}
 \alias{grd_cell_rct.grd_rct}
 \alias{grd_cell_rct.grd_xy}
-\alias{grd_cell_center}
-\alias{grd_cell_center.grd_rct}
-\alias{grd_cell_center.grd_xy}
+\alias{grd_cell_xy}
+\alias{grd_cell_xy.grd_rct}
+\alias{grd_cell_xy.grd_xy}
 \title{Grid cell operators}
 \usage{
 grd_cell(grid, point, ..., snap = grd_snap_next)
@@ -21,11 +21,11 @@ grd_cell_rct(grid, i, j = NULL, ...)
 
 \method{grd_cell_rct}{grd_xy}(grid, i, j = NULL, ..., out_of_bounds = "keep")
 
-grd_cell_center(grid, i, j = NULL, ...)
+grd_cell_xy(grid, i, j = NULL, ...)
 
-\method{grd_cell_center}{grd_rct}(grid, i, j = NULL, ..., out_of_bounds = "keep")
+\method{grd_cell_xy}{grd_rct}(grid, i, j = NULL, ..., out_of_bounds = "keep")
 
-\method{grd_cell_center}{grd_xy}(grid, i, j = NULL, ..., out_of_bounds = "keep")
+\method{grd_cell_xy}{grd_xy}(grid, i, j = NULL, ..., out_of_bounds = "keep")
 }
 \arguments{
 \item{grid}{A \code{\link[=grd_xy]{grd_xy()}}, \code{\link[=grd_rct]{grd_rct()}}, or other object
@@ -63,7 +63,7 @@ negative values.
 \item \code{grd_cell_range()} returns a slice describing the range of indices
 in the \code{i} and \code{j} directions.
 \item \code{grd_cell_rct()} returns a \code{\link[wk:rct]{wk::rct()}} of the cell extent at \verb{i, j}.
-\item \code{grd_cell_center()} returns a \code{\link[wk:xy]{wk::xy()}} of the cell center at \verb{i, j}.
+\item \code{grd_cell_xy()} returns a \code{\link[wk:xy]{wk::xy()}} of the cell center at \verb{i, j}.
 }
 }
 \description{
@@ -74,6 +74,6 @@ grid <- grd(nx = 3, ny = 2)
 grd_cell(grid, xy(0.5, 0.5))
 grd_cell_range(grid, grid$bbox)
 grd_cell_rct(grid, 1, 1)
-grd_cell_center(grid, 1, 1)
+grd_cell_xy(grid, 1, 1)
 
 }

@@ -64,16 +64,16 @@ plot(grd_crop(grid, rct(5917000, 1757600, 5917300, 1757800)))
 <img src="man/figures/README-subset-2.png" width="100%" />
 
 Use `grd_cell()` or `grd_cell_range()` to find cell indices based on a
-spatial query; use `grd_cell_rct()` or `grd_cell_center()` to get
+spatial query; use `grd_cell_rct()` or `grd_cell_xy()` to get
 information about specific cells:
 
 ``` r
 (cell_ids <- grd_cell(grid, xy(5917100, 1757700)))
-#> $i
-#> [1] 18
-#> 
-#> $j
-#> [1] 11
+#>    i  j
+#> 1 18 11
+grd_cell_xy(grid, cell_ids)
+#> <wk_xy[1] with CRS=EPSG:2193>
+#> [1] (5917105 1757695)
 grd_cell_rct(grid, cell_ids)
 #> <wk_rct[1] with CRS=EPSG:2193>
 #> [1] [5917100 1757690 5917110 1757700]

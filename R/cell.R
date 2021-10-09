@@ -20,7 +20,7 @@
 #'   - `grd_cell_range()` returns a slice describing the range of indices
 #'     in the `i` and `j` directions.
 #'   - `grd_cell_rct()` returns a [wk::rct()] of the cell extent at `i, j`.
-#'   - `grd_cell_center()` returns a [wk::xy()] of the cell center at `i, j`.
+#'   - `grd_cell_xy()` returns a [wk::xy()] of the cell center at `i, j`.
 #' @export
 #'
 #' @examples
@@ -28,7 +28,7 @@
 #' grd_cell(grid, xy(0.5, 0.5))
 #' grd_cell_range(grid, grid$bbox)
 #' grd_cell_rct(grid, 1, 1)
-#' grd_cell_center(grid, 1, 1)
+#' grd_cell_xy(grid, 1, 1)
 #'
 grd_cell <- function(grid, point, ..., snap = grd_snap_next) {
   UseMethod("grd_cell")
@@ -133,13 +133,13 @@ grd_cell_rct.grd_xy <- function(grid, i, j = NULL, ..., out_of_bounds = "keep") 
 
 #' @rdname grd_cell
 #' @export
-grd_cell_center <- function(grid, i, j = NULL, ...) {
-  UseMethod("grd_cell_center")
+grd_cell_xy <- function(grid, i, j = NULL, ...) {
+  UseMethod("grd_cell_xy")
 }
 
 #' @rdname grd_cell
 #' @export
-grd_cell_center.grd_rct <- function(grid, i, j = NULL, ..., out_of_bounds = "keep") {
+grd_cell_xy.grd_rct <- function(grid, i, j = NULL, ..., out_of_bounds = "keep") {
   s <- grd_summary(grid)
 
   # non-numeric values don't make sense here because i and j are vectorized
@@ -163,8 +163,8 @@ grd_cell_center.grd_rct <- function(grid, i, j = NULL, ..., out_of_bounds = "kee
 
 #' @rdname grd_cell
 #' @export
-grd_cell_center.grd_xy <- function(grid, i, j = NULL, ..., out_of_bounds = "keep") {
-  grd_cell_center(as_grd_rct(grid), i, j, out_of_bounds = out_of_bounds)
+grd_cell_xy.grd_xy <- function(grid, i, j = NULL, ..., out_of_bounds = "keep") {
+  grd_cell_xy(as_grd_rct(grid), i, j, out_of_bounds = out_of_bounds)
 }
 
 

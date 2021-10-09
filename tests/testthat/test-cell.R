@@ -166,56 +166,56 @@ test_that("grd_cell_rct() works for grd_xy()", {
   expect_error(grd_cell_rct(grid, "fish", "fish"), "must be numeric")
 })
 
-test_that("grd_cell_center() works for grd_rct()", {
+test_that("grd_cell_xy() works for grd_rct()", {
   empty <- grd_rct(matrix(nrow = 0, ncol = 0))
   expect_identical(
-    grd_cell_center(empty, 0, 0),
+    grd_cell_xy(empty, 0, 0),
     xy(NA, NA)
   )
 
   grid <- grd(nx = 3, ny = 2)
-  expect_identical(grd_cell_center(grid, 1, 1), xy(0.5, 1.5))
-  expect_identical(grd_cell_center(grid, 0, 0), xy(-0.5, 2.5))
+  expect_identical(grd_cell_xy(grid, 1, 1), xy(0.5, 1.5))
+  expect_identical(grd_cell_xy(grid, 0, 0), xy(-0.5, 2.5))
   expect_identical(
-    grd_cell_center(grid, 0, 0, out_of_bounds = "discard"),
+    grd_cell_xy(grid, 0, 0, out_of_bounds = "discard"),
     xy(crs = NULL)
   )
   expect_identical(
-    grd_cell_center(grid, 0, 0, out_of_bounds = "censor"),
+    grd_cell_xy(grid, 0, 0, out_of_bounds = "censor"),
     xy(NA, NA)
   )
   expect_identical(
-    grd_cell_center(grid, 0, 0, out_of_bounds = "squish"),
-    grd_cell_center(grid, 1, 1)
+    grd_cell_xy(grid, 0, 0, out_of_bounds = "squish"),
+    grd_cell_xy(grid, 1, 1)
   )
 
-  expect_error(grd_cell_center(grid, "fish", "fish"), "must be numeric")
+  expect_error(grd_cell_xy(grid, "fish", "fish"), "must be numeric")
 })
 
-test_that("grd_cell_center() works for grd_xy()", {
+test_that("grd_cell_xy() works for grd_xy()", {
   empty <- grd_xy(matrix(nrow = 0, ncol = 0))
   expect_identical(
-    grd_cell_center(empty, 0, 0),
+    grd_cell_xy(empty, 0, 0),
     xy(NA, NA)
   )
 
   grid <- grd(nx = 3, ny = 2, type = "centers")
-  expect_identical(grd_cell_center(grid, 1, 1), xy(0.5, 1.5))
-  expect_identical(grd_cell_center(grid, 0, 0), xy(-0.5, 2.5))
+  expect_identical(grd_cell_xy(grid, 1, 1), xy(0.5, 1.5))
+  expect_identical(grd_cell_xy(grid, 0, 0), xy(-0.5, 2.5))
   expect_identical(
-    grd_cell_center(grid, 0, 0, out_of_bounds = "discard"),
+    grd_cell_xy(grid, 0, 0, out_of_bounds = "discard"),
     xy(crs = NULL)
   )
   expect_identical(
-    grd_cell_center(grid, 0, 0, out_of_bounds = "censor"),
+    grd_cell_xy(grid, 0, 0, out_of_bounds = "censor"),
     xy(NA, NA)
   )
   expect_identical(
-    grd_cell_center(grid, 0, 0, out_of_bounds = "squish"),
-    grd_cell_center(grid, 1, 1)
+    grd_cell_xy(grid, 0, 0, out_of_bounds = "squish"),
+    grd_cell_xy(grid, 1, 1)
   )
 
-  expect_error(grd_cell_center(grid, "fish", "fish"), "must be numeric")
+  expect_error(grd_cell_xy(grid, "fish", "fish"), "must be numeric")
 })
 
 test_that("ij_expand_one works", {
