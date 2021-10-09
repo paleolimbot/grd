@@ -3,9 +3,9 @@
 \name{grd_cell}
 \alias{grd_cell}
 \alias{grd_cell_range}
-\alias{grd_cell_bounds}
-\alias{grd_cell_bounds.grd_rct}
-\alias{grd_cell_bounds.grd_xy}
+\alias{grd_cell_rct}
+\alias{grd_cell_rct.grd_rct}
+\alias{grd_cell_rct.grd_xy}
 \alias{grd_cell_center}
 \alias{grd_cell_center.grd_rct}
 \alias{grd_cell_center.grd_xy}
@@ -15,11 +15,11 @@ grd_cell(grid, point, ..., snap = grd_snap_next)
 
 grd_cell_range(grid, bbox, ..., snap = grd_snap_next)
 
-grd_cell_bounds(grid, i, j = NULL, ...)
+grd_cell_rct(grid, i, j = NULL, ...)
 
-\method{grd_cell_bounds}{grd_rct}(grid, i, j = NULL, ..., out_of_bounds = "keep")
+\method{grd_cell_rct}{grd_rct}(grid, i, j = NULL, ..., out_of_bounds = "keep")
 
-\method{grd_cell_bounds}{grd_xy}(grid, i, j = NULL, ..., out_of_bounds = "keep")
+\method{grd_cell_rct}{grd_xy}(grid, i, j = NULL, ..., out_of_bounds = "keep")
 
 grd_cell_center(grid, i, j = NULL, ...)
 
@@ -62,7 +62,7 @@ will be outside \code{dim(grid)} for points outside \code{wk_bbox(grid)} includi
 negative values.
 \item \code{grd_cell_range()} returns a slice describing the range of indices
 in the \code{i} and \code{j} directions.
-\item \code{grd_cell_bounds()} returns a \code{\link[wk:rct]{wk::rct()}} of the cell extent at \verb{i, j}.
+\item \code{grd_cell_rct()} returns a \code{\link[wk:rct]{wk::rct()}} of the cell extent at \verb{i, j}.
 \item \code{grd_cell_center()} returns a \code{\link[wk:xy]{wk::xy()}} of the cell center at \verb{i, j}.
 }
 }
@@ -73,7 +73,7 @@ Grid cell operators
 grid <- grd(nx = 3, ny = 2)
 grd_cell(grid, xy(0.5, 0.5))
 grd_cell_range(grid, grid$bbox)
-grd_cell_bounds(grid, 1, 1)
+grd_cell_rct(grid, 1, 1)
 grd_cell_center(grid, 1, 1)
 
 }

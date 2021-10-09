@@ -64,7 +64,7 @@ plot(grd_crop(grid, rct(5917000, 1757600, 5917300, 1757800)))
 <img src="man/figures/README-subset-2.png" width="100%" />
 
 Use `grd_cell()` or `grd_cell_range()` to find cell indices based on a
-spatial query; use `grd_cell_bounds()` or `grd_cell_center()` to get
+spatial query; use `grd_cell_rct()` or `grd_cell_center()` to get
 information about specific cells:
 
 ``` r
@@ -74,7 +74,7 @@ information about specific cells:
 #> 
 #> $j
 #> [1] 11
-grd_cell_bounds(grid, cell_ids)
+grd_cell_rct(grid, cell_ids)
 #> <wk_rct[1] with CRS=EPSG:2193>
 #> [1] [5917100 1757690 5917110 1757700]
 ```

@@ -19,7 +19,7 @@
 #'     negative values.
 #'   - `grd_cell_range()` returns a slice describing the range of indices
 #'     in the `i` and `j` directions.
-#'   - `grd_cell_bounds()` returns a [wk::rct()] of the cell extent at `i, j`.
+#'   - `grd_cell_rct()` returns a [wk::rct()] of the cell extent at `i, j`.
 #'   - `grd_cell_center()` returns a [wk::xy()] of the cell center at `i, j`.
 #' @export
 #'
@@ -27,7 +27,7 @@
 #' grid <- grd(nx = 3, ny = 2)
 #' grd_cell(grid, xy(0.5, 0.5))
 #' grd_cell_range(grid, grid$bbox)
-#' grd_cell_bounds(grid, 1, 1)
+#' grd_cell_rct(grid, 1, 1)
 #' grd_cell_center(grid, 1, 1)
 #'
 grd_cell <- function(grid, point, ..., snap = grd_snap_next) {
@@ -95,20 +95,20 @@ grd_cell_range.default <- function(grid, bbox, ..., snap = grd_snap_next) {
 
 #' @rdname grd_cell
 #' @export
-grd_cell_bounds <- function(grid, i, j = NULL, ...) {
-  UseMethod("grd_cell_bounds")
+grd_cell_rct <- function(grid, i, j = NULL, ...) {
+  UseMethod("grd_cell_rct")
 }
 
 #' @rdname grd_cell
 #' @export
-grd_cell_bounds.grd_rct <- function(grid, i, j = NULL, ..., out_of_bounds = "keep") {
+grd_cell_rct.grd_rct <- function(grid, i, j = NULL, ..., out_of_bounds = "keep") {
   s <- grd_summary(grid)
 
   # non-numeric values don't make sense here because i and j are vectorized
   # instead of crossed to form the final values
   ij <- ij_from_args(i, j)
   if (!is.numeric(ij$i) || !is.numeric(ij$j)) {
-    stop("`i` and `j` must be numeric index vectors in grd_cell_bounds()")
+    stop("`i` and `j` must be numeric index vectors in grd_cell_rct()")
   }
 
   # recycle to a common length
@@ -127,8 +127,8 @@ grd_cell_bounds.grd_rct <- function(grid, i, j = NULL, ..., out_of_bounds = "kee
 
 #' @rdname grd_cell
 #' @export
-grd_cell_bounds.grd_xy <- function(grid, i, j = NULL, ..., out_of_bounds = "keep") {
-  grd_cell_bounds(as_grd_rct(grid), i, j, out_of_bounds = out_of_bounds)
+grd_cell_rct.grd_xy <- function(grid, i, j = NULL, ..., out_of_bounds = "keep") {
+  grd_cell_rct(as_grd_rct(grid), i, j, out_of_bounds = out_of_bounds)
 }
 
 #' @rdname grd_cell
@@ -146,7 +146,7 @@ grd_cell_center.grd_rct <- function(grid, i, j = NULL, ..., out_of_bounds = "kee
   # instead of crossed to form the final values
   ij <- ij_from_args(i, j)
   if (!is.numeric(ij$i) || !is.numeric(ij$j)) {
-    stop("`i` and `j` must be numeric index vectors in grd_cell_bounds()")
+    stop("`i` and `j` must be numeric index vectors in grd_cell_rct()")
   }
 
   # recycle to a common length

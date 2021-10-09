@@ -114,56 +114,56 @@ test_that("grd_cell_range() works for grd_xy()", {
   )
 })
 
-test_that("grd_cell_bounds() works for grd_rct()", {
+test_that("grd_cell_rct() works for grd_rct()", {
   empty <- grd_rct(matrix(nrow = 0, ncol = 0))
   expect_identical(
-    wk_bbox(grd_cell_bounds(empty, 0, 0)),
+    wk_bbox(grd_cell_rct(empty, 0, 0)),
     wk_bbox(rct(NA, NA, NA, NA))
   )
 
   grid <- grd(nx = 3, ny = 2)
-  expect_identical(grd_cell_bounds(grid, 1, 1), rct(0, 1, 1, 2))
-  expect_identical(grd_cell_bounds(grid, 0, 0), rct(-1, 2, 0, 3))
+  expect_identical(grd_cell_rct(grid, 1, 1), rct(0, 1, 1, 2))
+  expect_identical(grd_cell_rct(grid, 0, 0), rct(-1, 2, 0, 3))
   expect_identical(
-    grd_cell_bounds(grid, 0, 0, out_of_bounds = "discard"),
+    grd_cell_rct(grid, 0, 0, out_of_bounds = "discard"),
     rct(crs = NULL)
   )
   expect_identical(
-    wk_bbox(grd_cell_bounds(grid, 0, 0, out_of_bounds = "censor")),
+    wk_bbox(grd_cell_rct(grid, 0, 0, out_of_bounds = "censor")),
     wk_bbox(rct(NA, NA, NA, NA))
   )
   expect_identical(
-    grd_cell_bounds(grid, 0, 0, out_of_bounds = "squish"),
-    grd_cell_bounds(grid, 1, 1)
+    grd_cell_rct(grid, 0, 0, out_of_bounds = "squish"),
+    grd_cell_rct(grid, 1, 1)
   )
 
-  expect_error(grd_cell_bounds(grid, "fish", "fish"), "must be numeric")
+  expect_error(grd_cell_rct(grid, "fish", "fish"), "must be numeric")
 })
 
-test_that("grd_cell_bounds() works for grd_xy()", {
+test_that("grd_cell_rct() works for grd_xy()", {
   empty <- grd_rct(matrix(nrow = 0, ncol = 0))
   expect_identical(
-    wk_bbox(grd_cell_bounds(empty, 0, 0)),
+    wk_bbox(grd_cell_rct(empty, 0, 0)),
     wk_bbox(rct(NA, NA, NA, NA))
   )
 
   grid <- grd(nx = 3, ny = 2, type = "centers")
-  expect_identical(grd_cell_bounds(grid, 1, 1), rct(0, 1, 1, 2))
-  expect_identical(grd_cell_bounds(grid, 0, 0), rct(-1, 2, 0, 3))
+  expect_identical(grd_cell_rct(grid, 1, 1), rct(0, 1, 1, 2))
+  expect_identical(grd_cell_rct(grid, 0, 0), rct(-1, 2, 0, 3))
   expect_identical(
-    grd_cell_bounds(grid, 0, 0, out_of_bounds = "discard"),
+    grd_cell_rct(grid, 0, 0, out_of_bounds = "discard"),
     rct(crs = NULL)
   )
   expect_identical(
-    wk_bbox(grd_cell_bounds(grid, 0, 0, out_of_bounds = "censor")),
+    wk_bbox(grd_cell_rct(grid, 0, 0, out_of_bounds = "censor")),
     wk_bbox(rct(NA, NA, NA, NA))
   )
   expect_identical(
-    grd_cell_bounds(grid, 0, 0, out_of_bounds = "squish"),
-    grd_cell_bounds(grid, 1, 1)
+    grd_cell_rct(grid, 0, 0, out_of_bounds = "squish"),
+    grd_cell_rct(grid, 1, 1)
   )
 
-  expect_error(grd_cell_bounds(grid, "fish", "fish"), "must be numeric")
+  expect_error(grd_cell_rct(grid, "fish", "fish"), "must be numeric")
 })
 
 test_that("grd_cell_center() works for grd_rct()", {
