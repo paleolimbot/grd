@@ -12,6 +12,7 @@
   ...,
   image = NULL,
   interpolate = FALSE,
+  oversample = 2,
   border = NA,
   asp = 1,
   bbox = NULL,
@@ -33,6 +34,9 @@ use \code{NULL} to do a quick-and-dirty rescale of the data such that the low
 value is black and the high value is white.}
 
 \item{interpolate}{Use \code{TRUE} to perform interpolation between color values.}
+
+\item{oversample}{A scale on the number of pixels on the device to use for
+sampling estimation of large raster values. Use \code{Inf} to disable.}
 
 \item{border}{Color to use for polygon borders. Use \code{NULL} for the default
 and \code{NA} to skip plotting borders.}

@@ -5,6 +5,8 @@
 #' @param image A raster or nativeRaster to pass to [graphics::rasterImage()].
 #'   use `NULL` to do a quick-and-dirty rescale of the data such that the low
 #'   value is black and the high value is white.
+#' @param oversample A scale on the number of pixels on the device to use for
+#'   sampling estimation of large raster values. Use `Inf` to disable.
 #' @param border Color to use for polygon borders. Use `NULL` for the default
 #'   and `NA` to skip plotting borders.
 #' @param interpolate Use `TRUE` to perform interpolation between color values.
@@ -27,6 +29,7 @@ plot.grd_xy <- function(x, ...) {
 plot.grd_rct <- function(x, ...,
                             image = NULL,
                             interpolate = FALSE,
+                            oversample = 2,
                             border = NA,
                             asp = 1, bbox = NULL, xlab = "", ylab = "",
                             add = FALSE) {
@@ -57,11 +60,33 @@ plot.grd_rct <- function(x, ...,
   # call with native = TRUE, but realize this isn't implemented
   # everywhere (so we may get a regular raster back)
   if (is.null(image)) {
-    image <- as.raster(x, native = TRUE)
+
+    # calculate an image based on a potential downsampling of the original
+    usr <- graphics::par("usr")
+    x_downsample_step <- grd_calculate_plot_step(x, oversample = oversample, usr = usr)
+
+    # if we're so zoomed out that nothing should be plotted, we are done
+    if (any(is.na(x_downsample_step))) {
+      return(invisible(x))
+    }
+
+    x_downsample <- grd_crop(
+      x,
+      rct(usr[1], usr[3], usr[2], usr[4], crs = wk_crs(x)),
+      step = x_downsample_step
+    )
+
+    # update bbox with cropped version and check for empty result
+    rct <- unclass(x_downsample$bbox)
+    if (identical(rct$xmax - rct$xmin, -Inf) || identical(rct$ymax - rct$ymin, -Inf)) {
+      return(invisible(x))
+    }
+
+    image <- as.raster(x_downsample, native = TRUE)
   }
 
   if (!inherits(image, "nativeRaster")) {
-    image <- as.raster(x, native = TRUE)
+    image <- as.raster(image, native = TRUE)
   }
 
   graphics::rasterImage(
@@ -69,7 +94,6 @@ plot.grd_rct <- function(x, ...,
     rct$xmin, rct$ymin, rct$xmax, rct$ymax,
     interpolate = interpolate
   )
-
 
   if (!identical(border, NA)) {
     if (is.null(border)) {
@@ -88,4 +112,51 @@ plot.grd_rct <- function(x, ...,
   }
 
   invisible(x)
+}
+
+grd_calculate_plot_step <- function(grid, oversample = c(2, 2),
+                                    usr = graphics::par("usr"),
+                                    device = NULL) {
+  # estimate resolution
+  usr <- graphics::par("usr")
+  usr_x <- usr[1:2]
+  usr_y <- usr[3:4]
+
+  if (is.null(device)) {
+    device_x <- graphics::grconvertX(usr_x, to = "device")
+    device_y <- graphics::grconvertY(usr_y, to = "device")
+  } else {
+    device_x <- device[1:2]
+    device_y <- device[3:4]
+  }
+
+  # Use resolution of 1 at the device level, scale to usr coords.
+  # Changing this number to 2 or 4 doesn't really affect the speed
+  # at which these plot; a value of 1 tends to give very good
+  # resolution and is acceptable even when a plot in the interactive
+  # device is zoomed.
+  scale_x <- abs(diff(device_x) / diff(usr_x))
+  scale_y <- abs(diff(device_y) / diff(usr_y))
+  resolution_x <- 1 / scale_x
+  resolution_y <- 1 / scale_y
+
+  # we need to know how many cells are going to be resolved by a crop
+  # to see how many fewer of them we need to sample
+  ranges <- grd_cell_range(grid, rct(usr_x[1], usr_y[1], usr_x[2], usr_y[2]))
+  nx <- ranges$j["stop"] - ranges$j["start"]
+  ny <- ranges$i["stop"] - ranges$i["start"]
+  dx <- abs(diff(usr_x) / nx)
+  dy <- abs(diff(usr_y) / ny)
+
+  # calculate which step value is closest (rounding down, clamping to valid limits)
+  step <- (c(resolution_y, resolution_x) / oversample) %/% c(dy, dx)
+  step <- pmax(1L, step)
+
+  # if the step is more than the number of pixels, it really shouldn't be
+  # displayed at all
+  if (any(step > c(ny, nx))) {
+    return(c(NA_integer_, NA_integer_))
+  }
+
+  step
 }
