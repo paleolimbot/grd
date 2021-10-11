@@ -27,13 +27,13 @@ grd_subset <- function(grid, i = NULL, j = NULL, ...) {
 
 #' @rdname grd_subset
 #' @export
-grd_crop <- function(grid, bbox, ..., snap = NULL) {
+grd_crop <- function(grid, bbox, ..., step = 1L, snap = NULL) {
   UseMethod("grd_crop")
 }
 
 #' @rdname grd_subset
 #' @export
-grd_extend <- function(grid, bbox, ..., snap = NULL) {
+grd_extend <- function(grid, bbox, ..., step = 1L, snap = NULL) {
   UseMethod("grd_extend")
 }
 
@@ -89,9 +89,9 @@ grd_subset_grd_internal <- function(grid, i = NULL, j = NULL) {
 
 #' @rdname grd_subset
 #' @export
-grd_crop.grd_rct <- function(grid, bbox, ..., snap = NULL) {
+grd_crop.grd_rct <- function(grid, bbox, ..., step = 1L, snap = NULL) {
   snap <- snap %||% list(grd_snap_next, grd_snap_previous)
-  ij <- grd_cell_range(grid, bbox, snap = snap)
+  ij <- grd_cell_range(grid, bbox, step = step, snap = snap)
 
   ij$i["start"] <- max(ij$i["start"], 0L)
   ij$i["stop"] <- min(ij$i["stop"], dim(grid)[1])
@@ -103,9 +103,9 @@ grd_crop.grd_rct <- function(grid, bbox, ..., snap = NULL) {
 
 #' @rdname grd_subset
 #' @export
-grd_crop.grd_xy <- function(grid, bbox, ..., snap = NULL) {
+grd_crop.grd_xy <- function(grid, bbox, ..., step = 1L, snap = NULL) {
   snap <- snap %||% list(ceiling, floor)
-  ij <- grd_cell_range(grid, bbox, snap = snap)
+  ij <- grd_cell_range(grid, bbox, step = step, snap = snap)
 
   ij$i["start"] <- max(ij$i["start"], 0L)
   ij$i["stop"] <- min(ij$i["stop"], dim(grid)[1])
@@ -117,14 +117,14 @@ grd_crop.grd_xy <- function(grid, bbox, ..., snap = NULL) {
 
 #' @rdname grd_subset
 #' @export
-grd_extend.grd_rct <- function(grid, bbox, ..., snap = NULL) {
+grd_extend.grd_rct <- function(grid, bbox, ..., step = 1L, snap = NULL) {
   snap <- snap %||% list(grd_snap_next, grd_snap_previous)
-  grd_subset(grid, grd_cell_range(grid, bbox, snap = snap))
+  grd_subset(grid, grd_cell_range(grid, bbox, step = step, snap = snap))
 }
 
 #' @rdname grd_subset
 #' @export
-grd_extend.grd_xy <- function(grid, bbox, ..., snap = NULL) {
+grd_extend.grd_xy <- function(grid, bbox, ...,  step = 1L, snap = NULL) {
   snap <- snap %||% list(ceiling, floor)
-  grd_subset(grid, grd_cell_range(grid, bbox, snap = snap))
+  grd_subset(grid, grd_cell_range(grid, bbox, step = step, snap = snap))
 }
