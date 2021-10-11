@@ -13,7 +13,13 @@
 \usage{
 grd_cell(grid, point, ..., snap = grd_snap_next)
 
-grd_cell_range(grid, bbox, ..., snap = grd_snap_next)
+grd_cell_range(
+  grid,
+  bbox = wk_bbox(grid),
+  ...,
+  step = 1L,
+  snap = grd_snap_next
+)
 
 grd_cell_rct(grid, i, j = NULL, ...)
 

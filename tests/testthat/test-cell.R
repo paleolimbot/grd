@@ -114,6 +114,52 @@ test_that("grd_cell_range() works for grd_xy()", {
   )
 })
 
+test_that("grd_cell_range() can downsample", {
+  empty <- grd_rct(matrix(nrow = 0, ncol = 0))
+  expect_identical(
+    grd_cell_range(empty, rct(0, 0, 1, 1), step = 2L),
+    list(i = integer(), j = integer())
+  )
+
+  grid <- grd(nx = 15, ny = 10)
+  expect_identical(
+    grd_cell_range(grid, step = 2L),
+    list(
+      i = c(start = 1, stop = 10, step = 2),
+      j = c(start = 1, stop = 15, step = 2)
+    )
+  )
+
+  expect_identical(
+    grd_cell_range(grid, step = 3L),
+    list(
+      i = c(start = 1, stop = 9, step = 3),
+      j = c(start = 1, stop = 14, step = 3)
+    )
+  )
+
+  expect_identical(
+    grd_cell_range(grid, step = c(1L, 3L)),
+    list(
+      i = c(start = 0, stop = 10, step = 1),
+      j = c(start = 1, stop = 14, step = 3)
+    )
+  )
+
+  expect_identical(
+    grd_cell_range(grid, step = c(3L, 1L)),
+    list(
+      i = c(start = 1, stop = 9, step = 3),
+      j = c(start = 0, stop = 15, step = 1)
+    )
+  )
+
+  expect_identical(
+    grd_cell_range(grid, step = c(1L, 1L)),
+    grd_cell_range(grid, step = 1L)
+  )
+})
+
 test_that("grd_cell_rct() works for grd_rct()", {
   empty <- grd_rct(matrix(nrow = 0, ncol = 0))
   expect_identical(
