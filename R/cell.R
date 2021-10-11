@@ -5,6 +5,7 @@
 #' @inheritParams grd_data
 #' @param bbox An [wk::rct()] object.
 #' @param out_of_bounds One of 'keep', 'censor', 'discard', or 'squish'
+#' @param step The difference between adjascent indices in the output
 #' @param point A [handleable][wk_handle] of points.
 #' @param snap A function that transforms real-valued indices to integer
 #'   indices (e.g., [floor()], [ceiling()], or [round()]).

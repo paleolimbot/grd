@@ -48,6 +48,8 @@ for the minimum and maximum index values, respectively.}
 
 \item{bbox}{An \code{\link[wk:rct]{wk::rct()}} object.}
 
+\item{step}{The difference between adjascent indices in the output}
+
 \item{i}{1-based index values. \code{i} indices correspond to decreasing
 \code{y} values; \code{j} indices correspond to increasing \code{x} values.
 Values outside the range \code{1:nrow|ncol(data)} will be censored to
