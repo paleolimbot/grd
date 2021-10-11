@@ -7,6 +7,7 @@
 \alias{rct}
 \alias{as_rct}
 \alias{as_xy}
+\alias{wk_bbox}
 \title{Objects exported from other packages}
 \keyword{internal}
 \description{
@@ -14,6 +15,6 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
-  \item{wk}{\code{\link[wk:rct]{as_rct}}, \code{\link[wk:xy]{as_xy}}, \code{\link[wk]{rct}}, \code{\link[wk]{xy}}}
+  \item{wk}{\code{\link[wk:rct]{as_rct}}, \code{\link[wk:xy]{as_xy}}, \code{\link[wk]{rct}}, \code{\link[wk]{wk_bbox}}, \code{\link[wk]{xy}}}
 }}
 

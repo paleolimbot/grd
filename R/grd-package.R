@@ -20,3 +20,6 @@ wk::as_rct
 
 #' @export
 wk::as_xy
+
+#' @export
+wk::wk_bbox

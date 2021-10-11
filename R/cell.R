@@ -50,12 +50,12 @@ grd_cell.grd_xy <- function(grid, point, ..., snap = grd_snap_next) {
 
 #' @rdname grd_cell
 #' @export
-grd_cell_range <- function(grid, bbox, ..., snap = grd_snap_next) {
+grd_cell_range <- function(grid, bbox, ..., step = 1L, snap = grd_snap_next) {
   UseMethod("grd_cell_range")
 }
 
 #' @export
-grd_cell_range.default <- function(grid, bbox, ..., snap = grd_snap_next) {
+grd_cell_range.default <- function(grid, bbox, ..., step = 1L, snap = grd_snap_next) {
   # normalized so that xmin < xmax, ymin < ymax
   if (inherits(bbox, "wk_rct")) {
     bbox <- wk_bbox(as_wkb(bbox))
@@ -81,13 +81,39 @@ grd_cell_range.default <- function(grid, bbox, ..., snap = grd_snap_next) {
   if (rct_target_height == -Inf || s$height == -Inf) {
     i <- integer()
   } else {
-    i <- c(start = indices_min$i - 1L, stop = indices_max$i, step = NA_integer_)
+    i <- c(start = indices_min$i - 1L, stop = indices_max$i, step = 1L)
   }
 
   if (rct_target_width == -Inf || s$width == -Inf) {
     j <- integer()
   } else {
-    j <- c(start = indices_min$j - 1L, stop = indices_max$j, step = NA_integer_)
+    j <- c(start = indices_min$j - 1L, stop = indices_max$j, step = 1L)
+  }
+
+  # process downsample if requested
+  if (!identical(step, 1L)) {
+    if (length(step) == 1L) {
+      step <- step[c(1L, 1L)]
+    }
+
+    n <- c(0L, 0L)
+    if (!identical(i, integer())) {
+      n[1] <- i["stop"] - i["start"]
+    }
+
+    if (!identical(j, integer())) {
+      n[2] <- j["stop"] - j["start"]
+    }
+
+    step <- pmin(n, pmax(1L, step))
+
+    i["step"] <- step[1]
+    i["start"] <- i["start"] + (step[1] %/% 2L)
+    i["stop"] <- i["stop"] - ((step[1] - 1L) %/% 2L)
+
+    j["step"] <- step[2]
+    j["start"] <- j["start"] + (step[2] %/% 2L)
+    j["stop"] <- j["stop"] - ((step[2] - 1L) %/% 2L)
   }
 
   list(i = i, j = j)

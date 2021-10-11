@@ -38,8 +38,8 @@ test_that("grd_cell_range() works for grd_rct()", {
   expect_identical(
     grd_cell_range(grid, wk_bbox(grid), snap = list(ceiling, floor)),
     list(
-      i = c(start = 0, stop = nrow(grid), step = NA_integer_),
-      j = c(start = 0, stop = ncol(grid), step = NA_integer_)
+      i = c(start = 0, stop = nrow(grid), step = 1L),
+      j = c(start = 0, stop = ncol(grid), step = 1L)
     )
   )
 
@@ -47,8 +47,8 @@ test_that("grd_cell_range() works for grd_rct()", {
   expect_identical(
     grd_cell_range(grid, bbox = rct(0, 86, 3, 87), snap = list(ceiling, floor)),
     list(
-      i = c(start = 0, stop = 1, step = NA_integer_),
-      j = c(start = 0, stop = 3, step = NA_integer_)
+      i = c(start = 0, stop = 1, step = 1L),
+      j = c(start = 0, stop = 3, step = 1L)
     )
   )
 
@@ -56,8 +56,8 @@ test_that("grd_cell_range() works for grd_rct()", {
   expect_identical(
     grd_cell_range(grid, bbox = rct(0.5, 86.1, 2.5, 86.9)),
     list(
-      i = c(start = 0, stop = 1, step = NA_integer_),
-      j = c(start = 0, stop = 3, step = NA_integer_)
+      i = c(start = 0, stop = 1, step = 1L),
+      j = c(start = 0, stop = 3, step = 1L)
     )
   )
 
@@ -84,8 +84,8 @@ test_that("grd_cell_range() works for grd_xy()", {
   expect_identical(
     grd_cell_range(grid, wk_bbox(grid)),
     list(
-      i = c(start = 0, stop = nrow(grid), step = NA_integer_),
-      j = c(start = 0, stop = ncol(grid), step = NA_integer_)
+      i = c(start = 0, stop = nrow(grid), step = 1L),
+      j = c(start = 0, stop = ncol(grid), step = 1L)
     )
   )
 
@@ -93,8 +93,8 @@ test_that("grd_cell_range() works for grd_xy()", {
   expect_identical(
     grd_cell_range(grid, bbox = rct(0, 85, 3, 86)),
     list(
-      i = c(start = 0, stop = 2, step = NA_integer_),
-      j = c(start = 0, stop = 4, step = NA_integer_)
+      i = c(start = 0, stop = 2, step = 1L),
+      j = c(start = 0, stop = 4, step = 1L)
     )
   )
 
@@ -102,8 +102,8 @@ test_that("grd_cell_range() works for grd_xy()", {
   expect_identical(
     grd_cell_range(grid, bbox = rct(0.6, 85.9, 2.4, 86.1)),
     list(
-      i = c(start = 0, stop = 1, step = NA_integer_),
-      j = c(start = 1, stop = 3, step = NA_integer_)
+      i = c(start = 0, stop = 1, step = 1L),
+      j = c(start = 1, stop = 3, step = 1L)
     )
   )
 
