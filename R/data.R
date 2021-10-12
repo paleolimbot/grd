@@ -36,18 +36,6 @@ grd_data <- function(grid) {
 
 #' @rdname grd_data
 #' @export
-grd_data_clone <- function(grid_data) {
-  UseMethod("grd_data_clone")
-}
-
-#' @rdname grd_data
-#' @export
-grd_data_clone.default <- function(grid_data) {
-  grid_data
-}
-
-#' @rdname grd_data
-#' @export
 grd_data_ptype <- function(grid_data) {
   UseMethod("grd_data_ptype")
 }
