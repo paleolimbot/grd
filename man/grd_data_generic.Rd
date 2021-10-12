@@ -30,5 +30,13 @@ the data.}
 An object of class \code{grd_data_generic}.
 }
 \description{
-Wrap data sources with non-standard ordering
+Whereas \code{\link[=grd]{grd()}} objects always index \code{\link[=grid_data]{grid_data()}} using
+y, x axis order with y values decreasing with increasing
+index value, data are often stored in other configurations.
+The \code{\link[=grd_data_generic]{grd_data_generic()}} class wraps the common case where
+axis order or axis direction differs from the default.
+The resulting object retains a reference to the underlying
+data but takes care of rearranging the calls to \code{dim()},
+\code{[}, and \verb{[<-} such that the object can be indexed
+in the same way.
 }

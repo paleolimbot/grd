@@ -1,6 +1,16 @@
 
 #' Wrap data sources with non-standard ordering
 #'
+#' Whereas [grd()] objects always index [grid_data()] using
+#' y, x axis order with y values decreasing with increasing
+#' index value, data are often stored in other configurations.
+#' The [grd_data_generic()] class wraps the common case where
+#' axis order or axis direction differs from the default.
+#' The resulting object retains a reference to the underlying
+#' data but takes care of rearranging the calls to `dim()`,
+#' `[`, and `[<-` such that the object can be indexed
+#' in the same way.
+#'
 #' @inheritParams grd_data
 #' @param data_order A character vector with the
 #'   same length as `dim(grid_data)` specifying the
@@ -57,7 +67,7 @@ grd_data_order.grd_data_generic <- function(grid_data) {
 
   # requires some magic to rearrange arguments that may be missing
   call <- match.call()
-  call[[1]] <- `[`
+  call[[1]] <- quote(`[`)
   call[[2]] <- x$grid_data
   call$drop <- FALSE
 
