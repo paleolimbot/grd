@@ -12,7 +12,7 @@
   ...,
   image = NULL,
   interpolate = FALSE,
-  oversample = 2,
+  oversample = 4,
   border = NA,
   asp = 1,
   bbox = NULL,

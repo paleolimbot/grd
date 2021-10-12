@@ -29,7 +29,7 @@ plot.grd_xy <- function(x, ...) {
 plot.grd_rct <- function(x, ...,
                             image = NULL,
                             interpolate = FALSE,
-                            oversample = 2,
+                            oversample = 4,
                             border = NA,
                             asp = 1, bbox = NULL, xlab = "", ylab = "",
                             add = FALSE) {
@@ -131,10 +131,8 @@ grd_calculate_plot_step <- function(grid, oversample = c(2, 2),
   }
 
   # Use resolution of 1 at the device level, scale to usr coords.
-  # Changing this number to 2 or 4 doesn't really affect the speed
-  # at which these plot; a value of 1 tends to give very good
-  # resolution and is acceptable even when a plot in the interactive
-  # device is zoomed.
+  # this is sort of like pixels but not always; an oversample of
+  # about 4 is needed for the operation to be invisible to the user
   scale_x <- abs(diff(device_x) / diff(usr_x))
   scale_y <- abs(diff(device_y) / diff(usr_y))
   resolution_x <- 1 / scale_x
