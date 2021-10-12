@@ -2,6 +2,12 @@
 % Please edit documentation in R/data.R
 \name{grd_data}
 \alias{grd_data}
+\alias{grd_data_clone}
+\alias{grd_data_clone.default}
+\alias{grd_data_ptype}
+\alias{grd_data_ptype.array}
+\alias{grd_data_collect}
+\alias{grd_data_collect.array}
 \alias{grd_data_subset}
 \alias{grd_data_subset.default}
 \alias{grd_data_subset.nativeRaster}
@@ -11,6 +17,30 @@
 \title{Grid data interface}
 \usage{
 grd_data(grid)
+
+grd_data_clone(grid_data)
+
+\method{grd_data_clone}{default}(grid_data)
+
+grd_data_ptype(grid_data)
+
+\method{grd_data_ptype}{array}(grid_data)
+
+grd_data_collect(
+  grid_data,
+  i = NULL,
+  j = NULL,
+  ...,
+  ptype = grd_data_ptype(grid_data)
+)
+
+\method{grd_data_collect}{array}(
+  grid_data,
+  i = NULL,
+  j = NULL,
+  ...,
+  ptype = grd_data_ptype(grid_data)
+)
 
 grd_data_subset(grid_data, i = NULL, j = NULL, ...)
 

@@ -34,6 +34,64 @@ grd_data <- function(grid) {
 
 #' @rdname grd_data
 #' @export
+grd_data_clone <- function(grid_data) {
+  UseMethod("grd_data_clone")
+}
+
+#' @rdname grd_data
+#' @export
+grd_data_clone.default <- function(grid_data) {
+  grid_data
+}
+
+#' @rdname grd_data
+#' @export
+grd_data_ptype <- function(grid_data) {
+  UseMethod("grd_data_ptype")
+}
+
+#' @rdname grd_data
+#' @export
+grd_data_ptype.array <- function(grid_data) {
+  grid_data[integer(0)]
+}
+
+#' @rdname grd_data
+#' @export
+grd_data_collect <- function(grid_data, i = NULL, j = NULL, ...,
+                             ptype = grd_data_ptype(grid_data)) {
+  UseMethod("grd_data_collect")
+}
+
+#' @rdname grd_data
+#' @export
+grd_data_collect.array <- function(grid_data, i = NULL, j = NULL, ...,
+                                   ptype = grd_data_ptype(grid_data)) {
+  if (identical(ptype, grd_data_ptype(grid_data))) {
+    # don't need to modify grid_data
+  } else if (inherits(ptype, "logical")) {
+    storage.mode(grid_data) <- "logical"
+  } else if (inherits(ptype, "integer")) {
+    storage.mode(grid_data) <- "integer"
+  } else if (inherits(ptype, "numeric")) {
+    storage.mode(grid_data) <- "double"
+  } else if (inherits(ptype, "raw")) {
+    storage.mode(grid_data) <- "raw"
+  } else if (inherits(ptype, "character")) {
+    storage.mode(grid_data) <- "character"
+  } else {
+    stop(
+      paste0("Can't convert grid data to '", class(grid_data)[1], "'"),
+      call. = FALSE
+    )
+  }
+
+  grd_data_subset(grid_data, i = i, j = j, ...)
+}
+
+
+#' @rdname grd_data
+#' @export
 grd_data_subset <- function(grid_data, i = NULL, j = NULL, ...) {
   UseMethod("grd_data_subset")
 }
@@ -88,3 +146,61 @@ grd_data_order.default <- function(grid_data) {
 grd_data_order.nativeRaster <- function(grid_data) {
   c("x", "y")
 }
+
+
+#' Wrap data sources with non-standard ordering
+#'
+#' @inheritParams grd_data
+#' @param dimensions Dimensions that should be returned
+#'   by `dim()`
+#' @param ptype The R object type that should be used to represent
+#'   the data.
+#' @param data_order A character vector with the
+#'   same length as `dim(grid_data)` specifying the
+#'   axis order and axis direction of indices in the
+#'   x y direction. The default `c("y", "x")` indicates
+#'   column-major ordering with y values decreasing
+#'   in the positive i index direction and x values increasing
+#'   in the positive j index direction. Use `"-y"` or `"-x"` to
+#'   switch axis directions. Use `NA` to indicate a non-xy
+#'   dimension.
+#'
+#' @return An object of class `grd_data_generic`.
+#' @export
+#'
+grd_data_generic <- function(grid_data, dimensions = dim(grid_data),
+                             data_order = grd_data_order(grid_data),
+                             ptype = grd_data_ptype(grid_data)) {
+  stopifnot(
+    length(data_order) != length(dimensions)
+  )
+
+  structure(
+    list(
+      grid_data = grid_data,
+      dimensions = dimensions,
+      data_order = data_order,
+      ptype = ptype
+    ),
+    class = "grd_data_generic"
+  )
+}
+
+#' @export
+dim.grd_data_generic <- function(x) {
+  x$dimensions
+}
+
+#' @export
+grd_data_ptype.grd_data_generic <- function(grid_data) {
+  grid_data$ptype
+}
+
+#' @export
+grd_data_order.grd_data_generic <- function(grid_data) {
+  grid_data$data_order
+}
+
+
+
+
