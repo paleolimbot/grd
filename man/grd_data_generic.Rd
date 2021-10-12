@@ -40,5 +40,5 @@ axis order or axis direction differs from the default.
 The resulting object retains a reference to the underlying
 data but takes care of rearranging the calls to \code{dim()},
 \code{[}, and \verb{[<-} such that the object can be indexed
-in the same way.
+and modified in the same way.
 }

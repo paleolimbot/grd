@@ -3,6 +3,7 @@
 S3method("$<-",grd)
 S3method("[",grd)
 S3method("[",grd_data_generic)
+S3method("[<-",grd_data_generic)
 S3method("[[<-",grd)
 S3method(as.raster,grd_rct)
 S3method(as_grd_rct,grd_rct)

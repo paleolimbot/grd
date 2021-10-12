@@ -9,7 +9,7 @@
 #' The resulting object retains a reference to the underlying
 #' data but takes care of rearranging the calls to `dim()`,
 #' `[`, and `[<-` such that the object can be indexed
-#' in the same way.
+#' and modified in the same way.
 #'
 #' @inheritParams grd_data
 #' @param data_order A character vector with the
@@ -134,6 +134,62 @@ grd_data_collect.grd_data_generic <- function(grid_data, i = NULL, j = NULL, ...
   if (!identical(call[[2L + xy[2]]], quote(expr = ))) {
     if (xy_rev[2]) {
       j <- rev(dims[xy[2]] - ...elt(xy[2]) + 1L)
+      j[j <= 0 | j > dims[xy[2]]] <- NA_integer_
+      call[[2L + xy[2]]] <- j
+    } else {
+      call[[2L + xy[2]]] <- ...elt(xy[2])
+    }
+  }
+
+  call[seq_len(...length()) + 2L] <- call[c(xy, setdiff(seq_along(dims), xy)) + 2L]
+  x$grid_data <- eval(call, envir = parent.frame())
+  x
+}
+
+#' @export
+`[<-.grd_data_generic` <- function(x, ..., value) {
+  stopifnot(...length() == length(dim(x)))
+
+  # requires some magic to rearrange arguments that may be missing
+  call <- match.call()
+  call[[1]] <- quote(`[<-`)
+  call[[2]] <- x$grid_data
+
+  axis_order <- gsub("^-", "", x$data_order)
+  xy <- c(which(axis_order == "y"), which(axis_order == "x"))
+
+  # resolve `value` to a known axis ordering if it has axes
+  if (!is.null(dim(value))) {
+    value <- grd_data_collect(value, ptype = x$ptype)
+
+    # potentially call aperm() to get axes in the correct order
+    value_dims <- dim(value)
+    perm <- seq_along(value_dims)
+    perm <- perm[c(xy, setdiff(seq_along(perm), xy))]
+    if (!all(perm == seq_along(value_dims))) {
+      value <- aperm(value, perm)
+    }
+
+    call$value <- value
+  }
+
+  # apply axis/index reverse if needed
+  xy_rev <- grepl("^-", x$data_order[!is.na(x$data_order)])
+  dims <- dim(x$grid_data)
+
+  if (!identical(call[[2L + xy[1]]], quote(expr = ))) {
+    if (xy_rev[1]) {
+      i <- dims[xy[1]] - ...elt(xy[1]) + 1L
+      i[i <= 0 | i > dims[xy[1]]] <- NA_integer_
+      call[[2L + xy[1]]] <- i
+    } else {
+      call[[2L + xy[1]]] <- ...elt(xy[1])
+    }
+  }
+
+  if (!identical(call[[2L + xy[2]]], quote(expr = ))) {
+    if (xy_rev[2]) {
+      j <- dims[xy[2]] - ...elt(xy[2]) + 1L
       j[j <= 0 | j > dims[xy[2]]] <- NA_integer_
       call[[2L + xy[2]]] <- j
     } else {
