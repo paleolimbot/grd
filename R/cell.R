@@ -41,7 +41,7 @@ grd_cell.grd_rct <- function(grid, point, ..., snap = grd_snap_next) {
   point <- unclass(as_xy(point))
   i <- if (s$width == -Inf) rep(NA_real_, length(point$x)) else (s$ymax - point$y) / s$dy
   j <- if (s$height == -Inf) rep(NA_real_, length(point$x)) else (point$x - s$xmin) / s$dx
-  new_data_frame(list(i = snap(i - 0.5) + 1L, j = snap(j - 0.5) + 1L))
+  new_data_frame(list(i = unname(snap(i - 0.5) + 1L), j = unname(snap(j - 0.5) + 1L)))
 }
 
 #' @export
