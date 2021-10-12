@@ -48,7 +48,10 @@ as_xy.grd_xy <- function(x, ...) {
   }
 
   # ordering such that values match up to internal data ordering
+  # remove NAs because we only care about the relationship of x and y
+  # to each other and not other dimensions
   x_data_order <- grd_data_order(x$data)
+  x_data_order <- x_data_order[!is.na(x_data_order)]
   data_order <- gsub("^[+-]", "", x_data_order)
 
   if (identical(data_order, c("y", "x"))) {
@@ -99,6 +102,7 @@ as_rct.grd_rct <- function(x, ...) {
   ys <- seq(rct$ymax, rct$ymin, by = -height / ny)
 
   x_data_order <- grd_data_order(x$data)
+  x_data_order <- x_data_order[!is.na(x_data_order)]
   data_order <- gsub("^[+-]", "", x_data_order)
 
   if (identical(data_order, c("y", "x"))) {

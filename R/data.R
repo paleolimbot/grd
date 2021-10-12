@@ -79,7 +79,8 @@ grd_data_order <- function(grid_data) {
 #' @rdname grd_data
 #' @export
 grd_data_order.default <- function(grid_data) {
-  attr(grid_data, "grd_data_order") %||% c("y", "x")
+  attr(grid_data, "grd_data_order") %||%
+    c("y", "x", rep(NA_character_, length(dim(grid_data)) - 2L))
 }
 
 #' @rdname grd_data
