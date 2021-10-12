@@ -2,7 +2,9 @@
 #' Grid data interface
 #'
 #' @inheritParams grd_summary
-#' @param grid_data The `data` member of a [grd()].
+#' @param grid_data The `data` member of a [grd()]. This is typically an
+#'   array but can also be an S3 object with the proper methods
+#'   implemented (e.g., [grd_data_generic()]).
 #' @param ptype The R object type that should be used to represent
 #'   the data.
 #' @param i,j 1-based index values. `i` indices correspond to decreasing

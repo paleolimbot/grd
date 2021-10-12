@@ -1,7 +1,7 @@
 
 #' Wrap data sources with non-standard ordering
 #'
-#' Whereas [grd()] objects always index [grid_data()] using
+#' Whereas [grd()] objects always index [grd_data()] using
 #' y, x axis order with y values decreasing with increasing
 #' index value, data are often stored in other configurations.
 #' The [grd_data_generic()] class wraps the common case where
@@ -61,6 +61,49 @@ grd_data_order.grd_data_generic <- function(grid_data) {
 }
 
 #' @export
+grd_data_collect.grd_data_generic <- function(grid_data, i = NULL, j = NULL, ...,
+                                              ptype = grd_data_ptype(grid_data)) {
+  # calculate the subset first
+  grid_data <- grd_data_subset(grid_data, i = i, j = j, ...)
+  dims <- dim(grid_data)
+  axis_order <- gsub("^-", "", grid_data$data_order)
+  xy <- c(which(axis_order == "y"), which(axis_order == "x"))
+
+  # potentially call aperm() to get axes in the correct order
+  perm <- seq_along(dims)
+  perm <- perm[c(xy, setdiff(seq_along(perm), xy))]
+  if (!all(perm == seq_along(dims))) {
+    data <- aperm(grid_data$grid_data, perm)
+  } else {
+    data <- grid_data$grid_data
+  }
+
+  # generate index vectors
+  xy_rev <- grepl("^-", grid_data$data_order[!is.na(grid_data$data_order)])
+
+  if (xy_rev[2]) {
+    subset_i <- rev(seq_len(dims[1]))
+  } else {
+    subset_i <- seq_len(dims[1])
+  }
+
+  if (xy_rev[1]) {
+    subset_j <- rev(seq_len(dims[2]))
+  } else {
+    subset_j <- seq_len(dims[2])
+  }
+
+  data_subset_args <- c(
+    list(data, subset_i, subset_j),
+    rep(list(quote(expr = )), length(dims) - 2L),
+    list(drop = FALSE)
+  )
+
+  data <- do.call("[", data_subset_args)
+  grd_data_collect(data, ptype = ptype)
+}
+
+#' @export
 `[.grd_data_generic` <- function(x, ..., drop = FALSE) {
   # doesn't make sense with drop argument
   stopifnot(identical(drop, FALSE), ...length() == length(dim(x)))
@@ -80,7 +123,7 @@ grd_data_order.grd_data_generic <- function(grid_data) {
 
   if (!identical(call[[2L + xy[1]]], quote(expr = ))) {
     if (xy_rev[1]) {
-      i <- dims[xy[1]] - ...elt(xy[1]) + 1L
+      i <- rev(dims[xy[1]] - ...elt(xy[1]) + 1L)
       i[i <= 0 | i > dims[xy[1]]] <- NA_integer_
       call[[2L + xy[1]]] <- i
     } else {
@@ -90,7 +133,7 @@ grd_data_order.grd_data_generic <- function(grid_data) {
 
   if (!identical(call[[2L + xy[2]]], quote(expr = ))) {
     if (xy_rev[2]) {
-      j <- dims[xy[2]] - ...elt(xy[2]) + 1L
+      j <- rev(dims[xy[2]] - ...elt(xy[2]) + 1L)
       j[j <= 0 | j > dims[xy[2]]] <- NA_integer_
       call[[2L + xy[2]]] <- j
     } else {

@@ -52,7 +52,9 @@ grd_data_order(grid_data)
 \item{grid}{A \code{\link[=grd_xy]{grd_xy()}}, \code{\link[=grd_rct]{grd_rct()}}, or other object
 implementing \verb{grd_*()} methods.}
 
-\item{grid_data}{The \code{data} member of a \code{\link[=grd]{grd()}}.}
+\item{grid_data}{The \code{data} member of a \code{\link[=grd]{grd()}}. This is typically an
+array but can also be an S3 object with the proper methods
+implemented (e.g., \code{\link[=grd_data_generic]{grd_data_generic()}}).}
 
 \item{i, j}{1-based index values. \code{i} indices correspond to decreasing
 \code{y} values; \code{j} indices correspond to increasing \code{x} values.

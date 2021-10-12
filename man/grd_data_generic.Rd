@@ -11,7 +11,9 @@ grd_data_generic(
 )
 }
 \arguments{
-\item{grid_data}{The \code{data} member of a \code{\link[=grd]{grd()}}.}
+\item{grid_data}{The \code{data} member of a \code{\link[=grd]{grd()}}. This is typically an
+array but can also be an S3 object with the proper methods
+implemented (e.g., \code{\link[=grd_data_generic]{grd_data_generic()}}).}
 
 \item{data_order}{A character vector with the
 same length as \code{dim(grid_data)} specifying the
@@ -30,7 +32,7 @@ the data.}
 An object of class \code{grd_data_generic}.
 }
 \description{
-Whereas \code{\link[=grd]{grd()}} objects always index \code{\link[=grid_data]{grid_data()}} using
+Whereas \code{\link[=grd]{grd()}} objects always index \code{\link[=grd_data]{grd_data()}} using
 y, x axis order with y values decreasing with increasing
 index value, data are often stored in other configurations.
 The \code{\link[=grd_data_generic]{grd_data_generic()}} class wraps the common case where
