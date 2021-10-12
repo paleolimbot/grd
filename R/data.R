@@ -3,6 +3,8 @@
 #'
 #' @inheritParams grd_summary
 #' @param grid_data The `data` member of a [grd()].
+#' @param ptype The R object type that should be used to represent
+#'   the data.
 #' @param i,j 1-based index values. `i` indices correspond to decreasing
 #'   `y` values; `j` indices correspond to increasing `x` values.
 #'   Values outside the range `1:nrow|ncol(data)` will be censored to
@@ -146,61 +148,3 @@ grd_data_order.default <- function(grid_data) {
 grd_data_order.nativeRaster <- function(grid_data) {
   c("x", "y")
 }
-
-
-#' Wrap data sources with non-standard ordering
-#'
-#' @inheritParams grd_data
-#' @param dimensions Dimensions that should be returned
-#'   by `dim()`
-#' @param ptype The R object type that should be used to represent
-#'   the data.
-#' @param data_order A character vector with the
-#'   same length as `dim(grid_data)` specifying the
-#'   axis order and axis direction of indices in the
-#'   x y direction. The default `c("y", "x")` indicates
-#'   column-major ordering with y values decreasing
-#'   in the positive i index direction and x values increasing
-#'   in the positive j index direction. Use `"-y"` or `"-x"` to
-#'   switch axis directions. Use `NA` to indicate a non-xy
-#'   dimension.
-#'
-#' @return An object of class `grd_data_generic`.
-#' @export
-#'
-grd_data_generic <- function(grid_data, dimensions = dim(grid_data),
-                             data_order = grd_data_order(grid_data),
-                             ptype = grd_data_ptype(grid_data)) {
-  stopifnot(
-    length(data_order) != length(dimensions)
-  )
-
-  structure(
-    list(
-      grid_data = grid_data,
-      dimensions = dimensions,
-      data_order = data_order,
-      ptype = ptype
-    ),
-    class = "grd_data_generic"
-  )
-}
-
-#' @export
-dim.grd_data_generic <- function(x) {
-  x$dimensions
-}
-
-#' @export
-grd_data_ptype.grd_data_generic <- function(grid_data) {
-  grid_data$ptype
-}
-
-#' @export
-grd_data_order.grd_data_generic <- function(grid_data) {
-  grid_data$data_order
-}
-
-
-
-

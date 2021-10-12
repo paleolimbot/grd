@@ -66,6 +66,9 @@ Values outside the range \code{1:nrow|ncol(data)} will be censored to
 \code{NA} including 0 and negative values.}
 
 \item{...}{Passed to S3 methods.}
+
+\item{ptype}{The R object type that should be used to represent
+the data.}
 }
 \value{
 \itemize{
