@@ -55,3 +55,36 @@ test_that("grd_rct() plot method works", {
   grid_native_rev_x <- grd_rct(col_native, rct(0, 0, -3, 2))
   expect_identical(plot(grid_native_rev_x), grid_native_rev_x)
 })
+
+
+test_that("as.raster() works for grd_rct() objects", {
+  grid_num <- grd_rct(matrix(1:6, nrow = 2, ncol = 3))
+  expect_identical(
+    as.raster(grid_num),
+    as.raster(matrix(0:5, nrow = 2, ncol = 3) / 5)
+  )
+
+  grid_constant <- grd_rct(matrix(0, nrow = 2, ncol = 3))
+  expect_identical(
+    as.raster(grid_constant),
+    as.raster(matrix(0.5, nrow = 2, ncol = 3))
+  )
+
+  grid_na <- grd_rct(matrix(NA, nrow = 2, ncol = 3))
+  expect_identical(
+    as.raster(grid_na),
+    as.raster(matrix(NA, nrow = 2, ncol = 3))
+  )
+
+  grid_raster <- grd_rct(as.raster(matrix(0:5, nrow = 2, ncol = 3) / 5))
+  expect_identical(
+    as.raster(grid_num),
+    as.raster(matrix(0:5, nrow = 2, ncol = 3) / 5)
+  )
+
+  grid_cols <- grd_rct(matrix("#1a1a1a", nrow = 2, ncol = 3))
+  expect_identical(
+    as.raster(grid_cols),
+    as.raster(matrix("#1a1a1a", nrow = 2, ncol = 3))
+  )
+})

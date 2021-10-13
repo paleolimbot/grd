@@ -147,35 +147,3 @@ test_that("grd$<- interface works", {
 
   expect_error(grid$not_data_or_bbox <- NULL, "Can't set element")
 })
-
-test_that("as.raster() works for grd_rct() objects", {
-  grid_num <- grd_rct(matrix(1:6, nrow = 2, ncol = 3))
-  expect_identical(
-    as.raster(grid_num),
-    as.raster(matrix(0:5, nrow = 2, ncol = 3) / 5)
-  )
-
-  grid_constant <- grd_rct(matrix(0, nrow = 2, ncol = 3))
-  expect_identical(
-    as.raster(grid_constant),
-    as.raster(matrix(0.5, nrow = 2, ncol = 3))
-  )
-
-  grid_na <- grd_rct(matrix(NA, nrow = 2, ncol = 3))
-  expect_identical(
-    as.raster(grid_na),
-    as.raster(matrix(NA, nrow = 2, ncol = 3))
-  )
-
-  grid_raster <- grd_rct(as.raster(matrix(0:5, nrow = 2, ncol = 3) / 5))
-  expect_identical(
-    as.raster(grid_num),
-    as.raster(matrix(0:5, nrow = 2, ncol = 3) / 5)
-  )
-
-  grid_cols <- grd_rct(matrix("#1a1a1a", nrow = 2, ncol = 3))
-  expect_identical(
-    as.raster(grid_cols),
-    as.raster(matrix("#1a1a1a", nrow = 2, ncol = 3))
-  )
-})

@@ -460,50 +460,6 @@ print.grd <- function(x, ...) {
   invisible(x)
 }
 
-#' @export
-#' @importFrom grDevices as.raster
-as.raster.grd_rct <- function(x, ..., i = NULL, j = NULL, native = NA) {
-  # as.raster() works when values are [0..1]. We can emulate
-  # this default by rescaling the image data if it's not already
-  # a raster or nativeRaster.
-  if (inherits(x$data, "nativeRaster") || grDevices::is.raster(x$data)) {
-    x$data
-  } else if (prod(dim(x)) == 0) {
-    as.raster(matrix(nrow = dim(x)[1], ncol = dim(x)[2]))
-  } else if (length(dim(x)) == 2L || all(dim(x)[c(-1L, -2L)]) == 1L) {
-    # try to interpret character() as hex colours, else
-    # try to resolve x$data as a double() array
-    if (is.character(grd_data_ptype(x$data))) {
-      return(as.raster(grd_data_collect(x$data, i = i, j = j, ptype = character())))
-    }
-
-    data <- grd_data_collect(x$data, i = i, j = j, ptype = double())
-
-    # we've checked that it's safe to drop the non-xy dimensions and
-    # collected the data so that we know the axis order is R-native
-    dim(data) <- dim(data)[1:2]
-
-    range <- suppressWarnings(range(data, finite = TRUE))
-    if (all(is.finite(range)) && (diff(range) > .Machine$double.eps)) {
-      image <- (data - range[1]) / diff(range)
-    } else if (all(is.finite(range))) {
-      # constant value
-      image <- data
-      image[] <- 0.5
-    } else {
-      # all NA values
-      image <- matrix(nrow = dim(data)[1], ncol = dim(data)[2])
-    }
-
-    as.raster(image)
-  } else {
-    stop(
-      "Can't convert non-numeric or non-matrix grid to raster image",
-      call. = FALSE
-    )
-  }
-}
-
 # normalize the data and the bbox such that xmax > xmin and ymax > ymin
 grd_internal_normalize <- function(x, bbox) {
   rct <- unclass(bbox)
