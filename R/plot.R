@@ -166,7 +166,7 @@ as.raster.grd_rct <- function(x, ..., i = NULL, j = NULL, native = NA) {
   # this default by rescaling the image data if it's not already
   # a raster or nativeRaster.
   if (inherits(x$data, "nativeRaster") || grDevices::is.raster(x$data)) {
-    x$data
+    grd_data_subset(x$data, i = i, j = j)
   } else if (prod(dim(x)) == 0) {
     as.raster(matrix(nrow = dim(x)[1], ncol = dim(x)[2]))
   } else if (length(dim(x)) == 2L || all(dim(x)[c(-1L, -2L)]) == 1L) {
