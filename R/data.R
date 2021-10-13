@@ -23,7 +23,7 @@
 #'     `c("x", "y")` for data with a row-major internal
 #'     ordering. Both 'x' and 'y' can be modified with
 #'     a negative sign to indicate right-to-left
-#'     or bottom-to-top internal ordering, respectively. This values
+#'     or bottom-to-top internal ordering, respectively. This value
 #'     does not affect the axis order or axis direction used to index
 #'     in [grd_subset()] or [grd_data_subset()].
 #' @export
@@ -59,6 +59,8 @@ grd_data_collect <- function(grid_data, i = NULL, j = NULL, ...,
 #' @export
 grd_data_collect.array <- function(grid_data, i = NULL, j = NULL, ...,
                                    ptype = grd_data_ptype(grid_data)) {
+  grid_data <- grd_data_subset(grid_data, i = i, j = j, ...)
+
   if (identical(ptype, grd_data_ptype(grid_data))) {
     # don't need to modify grid_data
   } else if (inherits(ptype, "logical")) {
@@ -78,7 +80,7 @@ grd_data_collect.array <- function(grid_data, i = NULL, j = NULL, ...,
     )
   }
 
-  grd_data_subset(grid_data, i = i, j = j, ...)
+  grid_data
 }
 
 

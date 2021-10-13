@@ -77,7 +77,7 @@ data with a column-major internal ordering and
 \code{c("x", "y")} for data with a row-major internal
 ordering. Both 'x' and 'y' can be modified with
 a negative sign to indicate right-to-left
-or bottom-to-top internal ordering, respectively. This values
+or bottom-to-top internal ordering, respectively. This value
 does not affect the axis order or axis direction used to index
 in \code{\link[=grd_subset]{grd_subset()}} or \code{\link[=grd_data_subset]{grd_data_subset()}}.
 }
