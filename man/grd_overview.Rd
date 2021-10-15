@@ -29,7 +29,7 @@ the \code{step} value by a power of 2 (i.e., a level of \code{1} indicates a ste
 A \code{\link[=grd]{grd()}}
 }
 \description{
-Overview levels are powers of 2
+Compute overview grid specifications
 }
 \examples{
 grid <- grd_rct(volcano)

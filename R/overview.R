@@ -1,8 +1,6 @@
 
 #' Compute overview grid specifications
 #'
-#' Overview levels are powers of 2
-#'
 #' @inheritParams grd_summary
 #' @param level An integer describing the overview level. This is related to
 #'   the `step` value by a power of 2 (i.e., a level of `1` indicates a step of
