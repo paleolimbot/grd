@@ -4,10 +4,7 @@
 \name{grd-package}
 \title{grd: Raster and Grid Geometry}
 \description{
-Provides a basic data structure for grids of points or
-  rectangles including the math needed to index, extract, and resample
-  these objects. A basic set of generics is provided such that downstream
-  packages can extend the concept of a grid to alternative data sources.
+Provides a basic data structure for grids of points or rectangles including the math needed to index, extract, and resample these objects. A basic set of generics is provided such that downstream packages can extend the concept of a grid to alternative data sources.
 }
 \seealso{
 Useful links:
